@@ -100,6 +100,5 @@ RSpec.configure do |config|
 end
 
 require 'boxboxbox'
-require 'zip_file_generator'
 
 SPEC_FIXTURE_DIR = File.expand_path('fixtures', __dir__)

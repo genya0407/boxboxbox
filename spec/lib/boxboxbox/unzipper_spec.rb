@@ -14,6 +14,8 @@ describe Boxboxbox::Unzipper do
       end
 
       before do
+        require 'zip_file_generator'
+
         zip_source_dir = File.join(SPEC_FIXTURE_DIR, 'sample_zip')
         ZipFileGenerator.new(zip_source_dir, zip_path).write
       end
