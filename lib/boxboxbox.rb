@@ -1,11 +1,11 @@
 module Boxboxbox
   class Image
-    # @dynamic name, pathname
-    attr_reader :name, :pathname
+    # @dynamic name, binary
+    attr_reader :name, :binary
 
-    def initialize(name:, pathname:)
+    def initialize(name:, binary:)
       @name = name
-      @pathname = pathname
+      @binary = binary
     end
   end
 
@@ -27,12 +27,6 @@ module Boxboxbox
       @image_name = image_name
       @top_left = top_left
       @bottom_right = bottom_right
-    end
-  end
-
-  class Unzipper
-    def unzip(zip_path:)
-      [Image.new(name: "hogehoge", pathname: Pathname('aaa.jpg'))]
     end
   end
 end 

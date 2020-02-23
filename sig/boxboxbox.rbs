@@ -3,9 +3,9 @@ end
 
 class Boxboxbox::Image
   attr_reader name: String
-  attr_reader pathname: Pathname
+  attr_reader binary: String
 
-  def initialize: (name: String, pathname: Pathname) -> untyped
+  def initialize: (name: String, binary: String) -> untyped
 end
 
 class Boxboxbox::Point
@@ -24,5 +24,18 @@ class Boxboxbox::Box
 end
 
 class Boxboxbox::Unzipper
-  def unzip: (zip_path: Pathname) -> _Each[Boxboxbox::Image, untyped]
+  def unzip: (zip_path: Pathname) -> _Each[Boxboxbox::Image, nil]
+end
+
+Boxboxbox::Unzipper::TARGET_EXTENSION_REGEX: Regexp
+
+class Zip::File
+  def self.open: (Pathname) { (Zip::File) -> void } -> void
+  def each: () { (Zip::Entry) -> void } -> void
+end
+
+class Zip::Entry
+  def name: -> String
+  def extract: -> void
+  def get_input_stream: -> IO
 end
