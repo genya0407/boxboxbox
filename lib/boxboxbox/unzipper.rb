@@ -7,10 +7,8 @@ module Boxboxbox
     def unzip(zip_path:)
       Enumerator.new do |yielder|
         Zip::InputStream.open(zip_path) do |zis|
-          loop do
-            entry = entry.get_next_entry
+          while entry = zis.get_next_entry do
             next unless entry.name =~ TARGET_EXTENSION_REGEX
-            entry.extract
             yielder << Image.new(name: entry.name, binary: entry.get_input_stream.read)
           end
         end
