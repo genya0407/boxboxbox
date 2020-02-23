@@ -29,7 +29,10 @@ end
 
 Boxboxbox::Unzipper::TARGET_EXTENSION_REGEX: Regexp
 
-class Zip::File
+class Zip::CentralDirectory
+end
+
+class Zip::File < Zip::CentralDirectory
   def self.open: (Pathname) { (Zip::File) -> void } -> void
   def each: () { (Zip::Entry) -> void } -> void
 end
