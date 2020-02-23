@@ -1,0 +1,1425 @@
+module Zip
+end
+
+class Zip::CentralDirectory
+  include Enumerable
+
+  attr_reader comment: untyped
+
+  # Returns an Enumerable containing the entries.
+  def entries: () -> untyped
+
+  def initialize: (?untyped entries, ?::String comment) -> untyped
+
+  def write_to_stream: (untyped io) -> untyped
+
+  def write_e_o_c_d: (untyped io, untyped offset, untyped cdir_size) -> untyped
+
+  def write_64_e_o_c_d: (untyped io, untyped offset, untyped cdir_size) -> untyped
+
+  def write_64_eocd_locator: (untyped io, untyped zip64_eocd_offset) -> untyped
+
+  def read_64_e_o_c_d: (untyped buf) -> untyped
+
+  def read_e_o_c_d: (untyped buf) -> untyped
+
+  def read_central_directory_entries: (untyped io) -> untyped
+
+  def read_from_stream: (untyped io) -> untyped
+
+  def get_e_o_c_d: (untyped buf) -> untyped
+
+  def zip64_file?: (untyped buf) -> untyped
+
+  def start_buf: (untyped io) -> untyped
+
+  def get_64_e_o_c_d: (untyped buf) -> untyped
+
+  # For iterating over the entries.
+  def each: () { () -> untyped } -> untyped
+
+  # Returns the number of entries in the central directory (and
+  # consequently in the zip archive).
+  def size: () -> untyped
+
+  def self.read_from_stream: (untyped io) -> untyped
+
+  def ==: (untyped other) -> untyped
+end
+
+Zip::CentralDirectory::END_OF_CDS: Integer
+
+Zip::CentralDirectory::ZIP64_END_OF_CDS: Integer
+
+Zip::CentralDirectory::ZIP64_EOCD_LOCATOR: Integer
+
+Zip::CentralDirectory::MAX_END_OF_CDS_SIZE: untyped
+
+Zip::CentralDirectory::STATIC_EOCD_SIZE: Integer
+
+
+class Zip::Compressor
+  # nodoc:all
+  def finish: () -> untyped
+end
+
+
+Zip::RUNNING_ON_WINDOWS: untyped
+
+Zip::CENTRAL_DIRECTORY_ENTRY_SIGNATURE: Integer
+
+Zip::CDIR_ENTRY_STATIC_HEADER_LENGTH: Integer
+
+Zip::LOCAL_ENTRY_SIGNATURE: Integer
+
+Zip::LOCAL_ENTRY_STATIC_HEADER_LENGTH: Integer
+
+Zip::LOCAL_ENTRY_TRAILING_DESCRIPTOR_LENGTH: untyped
+
+Zip::VERSION_MADE_BY: Integer
+
+# this library's version
+Zip::VERSION_NEEDED_TO_EXTRACT: Integer
+
+Zip::VERSION_NEEDED_TO_EXTRACT_ZIP64: Integer
+
+Zip::FILE_TYPE_FILE: Integer
+
+Zip::FILE_TYPE_DIR: Integer
+
+Zip::FILE_TYPE_SYMLINK: Integer
+
+Zip::FSTYPE_FAT: Integer
+
+Zip::FSTYPE_AMIGA: Integer
+
+Zip::FSTYPE_VMS: Integer
+
+Zip::FSTYPE_UNIX: Integer
+
+Zip::FSTYPE_VM_CMS: Integer
+
+Zip::FSTYPE_ATARI: Integer
+
+Zip::FSTYPE_HPFS: Integer
+
+Zip::FSTYPE_MAC: Integer
+
+Zip::FSTYPE_Z_SYSTEM: Integer
+
+Zip::FSTYPE_CPM: Integer
+
+Zip::FSTYPE_TOPS20: Integer
+
+Zip::FSTYPE_NTFS: Integer
+
+Zip::FSTYPE_QDOS: Integer
+
+Zip::FSTYPE_ACORN: Integer
+
+Zip::FSTYPE_VFAT: Integer
+
+Zip::FSTYPE_MVS: Integer
+
+Zip::FSTYPE_BEOS: Integer
+
+Zip::FSTYPE_TANDEM: Integer
+
+Zip::FSTYPE_THEOS: Integer
+
+Zip::FSTYPE_MAC_OSX: Integer
+
+Zip::FSTYPE_ATHEOS: Integer
+
+Zip::FSTYPES: untyped
+
+Zip::COMPRESSION_METHOD_STORE: Integer
+
+Zip::COMPRESSION_METHOD_SHRINK: Integer
+
+Zip::COMPRESSION_METHOD_REDUCE_1: Integer
+
+Zip::COMPRESSION_METHOD_REDUCE_2: Integer
+
+Zip::COMPRESSION_METHOD_REDUCE_3: Integer
+
+Zip::COMPRESSION_METHOD_REDUCE_4: Integer
+
+Zip::COMPRESSION_METHOD_IMPLODE: Integer
+
+# RESERVED = 7
+Zip::COMPRESSION_METHOD_DEFLATE: Integer
+
+Zip::COMPRESSION_METHOD_DEFLATE_64: Integer
+
+Zip::COMPRESSION_METHOD_PKWARE_DCLI: Integer
+
+# RESERVED = 11
+Zip::COMPRESSION_METHOD_BZIP2: Integer
+
+# RESERVED = 13
+Zip::COMPRESSION_METHOD_LZMA: Integer
+
+# RESERVED = 15
+Zip::COMPRESSION_METHOD_IBM_CMPSC: Integer
+
+# RESERVED = 17
+Zip::COMPRESSION_METHOD_IBM_TERSE: Integer
+
+Zip::COMPRESSION_METHOD_IBM_LZ77: Integer
+
+Zip::COMPRESSION_METHOD_JPEG: Integer
+
+Zip::COMPRESSION_METHOD_WAVPACK: Integer
+
+Zip::COMPRESSION_METHOD_PPMD: Integer
+
+Zip::COMPRESSION_METHOD_AES: Integer
+
+Zip::COMPRESSION_METHODS: untyped
+
+
+class Zip::DecryptedIo
+  def initialize: (untyped io, untyped decrypter) -> untyped
+
+  def read: (?untyped? length, ?::String outbuf) -> untyped
+
+  def eof: () -> untyped
+
+  def buffer: () -> untyped
+
+  def input_finished?: () -> untyped
+
+  def produce_input: () -> untyped
+end
+
+# nodoc:all
+Zip::DecryptedIo::CHUNK_SIZE: Integer
+
+
+class Zip::Encrypter
+end
+
+class Zip::Decrypter
+end
+
+
+module Zip::NullEncryption
+  def header_bytesize: () -> untyped
+
+  def gp_flags: () -> untyped
+end
+
+class Zip::NullEncrypter < Encrypter
+  include NullEncryption
+
+  def header: (untyped _mtime) -> untyped
+
+  def encrypt: (untyped data) -> untyped
+
+  def data_descriptor: (untyped _crc32, untyped _compressed_size, untyped _uncomprssed_size) -> untyped
+
+  def reset!: () -> untyped
+end
+
+class Zip::NullDecrypter < Decrypter
+  include NullEncryption
+
+  def decrypt: (untyped data) -> untyped
+
+  def reset!: (untyped _header) -> untyped
+end
+
+
+module Zip::TraditionalEncryption
+  def initialize: (untyped password) -> untyped
+
+  def header_bytesize: () -> untyped
+
+  def gp_flags: () -> untyped
+
+  def reset_keys!: () -> untyped
+
+  def update_keys: (untyped n) -> untyped
+
+  def decrypt_byte: () -> untyped
+end
+
+class Zip::TraditionalEncrypter < Encrypter
+  include TraditionalEncryption
+
+  def header: (untyped mtime) -> untyped
+
+  def encrypt: (untyped data) -> untyped
+
+  def data_descriptor: (untyped crc32, untyped compressed_size, untyped uncomprssed_size) -> untyped
+
+  def reset!: () -> untyped
+
+  def encode: (untyped n) -> untyped
+end
+
+class Zip::TraditionalDecrypter < Decrypter
+  include TraditionalEncryption
+
+  def decrypt: (untyped data) -> untyped
+
+  def reset!: (untyped header) -> untyped
+
+  def decode: (untyped n) -> untyped
+end
+
+
+class Zip::Decompressor
+  def self.decompressor_classes: () -> untyped
+
+  def self.register: (untyped compression_method, untyped decompressor_class) -> untyped
+
+  def self.find_by_compression_method: (untyped compression_method) -> untyped
+
+  attr_reader input_stream: untyped
+
+  attr_reader decompressed_size: untyped
+
+  def initialize: (untyped input_stream, ?untyped? decompressed_size) -> untyped
+end
+
+# nodoc:all
+Zip::Decompressor::CHUNK_SIZE: Integer
+
+
+class Zip::Deflater < Compressor
+  # nodoc:all
+  def initialize: (untyped output_stream, ?untyped level, ?untyped encrypter) -> untyped
+
+  def <<: (untyped data) -> untyped
+
+  def finish: () -> untyped
+
+  attr_reader size: untyped
+
+  attr_reader crc: untyped
+end
+
+
+class Zip::DOSTime < Time
+  def to_binary_dos_time: () -> untyped
+
+  def to_binary_dos_date: () -> untyped
+
+  # Dos time is only stored with two seconds accuracy
+  def dos_equals: (untyped other) -> untyped
+
+  # Create a DOSTime instance from a vanilla Time instance.
+  def self.from_time: (untyped time) -> untyped
+
+  def self.parse_binary_dos_format: (untyped binaryDosDate, untyped binaryDosTime) -> untyped
+end
+
+
+class Zip::Entry
+  attr_accessor comment: untyped
+
+  attr_accessor compressed_size: untyped
+
+  attr_accessor crc: untyped
+
+  attr_accessor extra: untyped
+
+  attr_accessor compression_method: untyped
+
+  attr_accessor name: untyped
+
+  attr_accessor size: untyped
+
+  attr_accessor local_header_offset: untyped
+
+  attr_accessor zipfile: untyped
+
+  attr_accessor fstype: untyped
+
+  attr_accessor external_file_attributes: untyped
+
+  attr_accessor internal_file_attributes: untyped
+
+  attr_accessor gp_flags: untyped
+
+  attr_accessor header_signature: untyped
+
+  attr_accessor follow_symlinks: untyped
+
+  attr_accessor restore_times: untyped
+
+  attr_accessor restore_permissions: untyped
+
+  attr_accessor restore_ownership: untyped
+
+  attr_accessor unix_uid: untyped
+
+  attr_accessor unix_gid: untyped
+
+  attr_accessor unix_perms: untyped
+
+  attr_accessor dirty: untyped
+
+  attr_reader ftype: untyped
+
+  attr_reader filepath: untyped
+
+  def set_default_vars_values: () -> untyped
+
+  def check_name: (untyped name) -> untyped
+
+  def initialize: (*untyped args) -> untyped
+
+  def encrypted?: () -> untyped
+
+  def incomplete?: () -> untyped
+
+  def time: () -> untyped
+
+  def time=: (untyped value) -> untyped
+
+  def file_type_is?: (untyped `type`) -> untyped
+
+  def name_is_directory?: () -> untyped
+
+  # Is the name a relative path, free of `..` patterns that could lead to
+  # path traversal attacks? This does NOT handle symlinks; if the path
+  # contains symlinks, this check is NOT enough to guarantee safety.
+  def name_safe?: () -> untyped
+
+  def local_entry_offset: () -> untyped
+
+  def name_size: () -> untyped
+
+  def extra_size: () -> untyped
+
+  def comment_size: () -> untyped
+
+  def calculate_local_header_size: () -> untyped
+
+  # check before rewriting an entry (after file sizes are known)
+  # that we didn't change the header size (and thus clobber file data or something)
+  def verify_local_header_size!: () -> untyped
+
+  def cdir_header_size: () -> untyped
+
+  def next_header_offset: () -> untyped
+
+  # Extracts entry to file dest_path (defaults to @name).
+  # NB: The caller is responsible for making sure dest_path is safe, if it
+  # is passed.
+  def extract: (?untyped? dest_path) { () -> untyped } -> untyped
+
+  def to_s: () -> untyped
+
+  def self.read_zip_short: (untyped io) -> untyped
+
+  def self.read_zip_long: (untyped io) -> untyped
+
+  def self.read_zip_64_long: (untyped io) -> untyped
+
+  def self.read_c_dir_entry: (untyped io) -> untyped
+
+  def self.read_local_entry: (untyped io) -> untyped
+
+  def unpack_local_entry: (untyped buf) -> untyped
+
+  def read_local_entry: (untyped io) -> untyped
+
+  def pack_local_entry: () -> untyped
+
+  def write_local_entry: (untyped io, ?bool rewrite) -> untyped
+
+  def unpack_c_dir_entry: (untyped buf) -> untyped
+
+  def set_ftype_from_c_dir_entry: () -> untyped
+
+  def check_c_dir_entry_static_header_length: (untyped buf) -> untyped
+
+  def check_c_dir_entry_signature: () -> untyped
+
+  def check_c_dir_entry_comment_size: () -> untyped
+
+  def read_c_dir_extra_field: (untyped io) -> untyped
+
+  def read_c_dir_entry: (untyped io) -> untyped
+
+  def file_stat: (untyped path) -> untyped
+
+  def get_extra_attributes_from_path: (untyped path) -> untyped
+
+  def set_unix_attributes_on_path: (untyped dest_path) -> untyped
+
+  def set_extra_attributes_on_path: (untyped dest_path) -> untyped
+
+  def pack_c_dir_entry: () -> untyped
+
+  def write_c_dir_entry: (untyped io) -> untyped
+
+  def ==: (untyped other) -> untyped
+
+  def <=>: (untyped other) -> untyped
+
+  # Returns an IO like object for the given ZipEntry.
+  # Warning: may behave weird with symlinks.
+  def get_input_stream: () { (untyped) -> untyped } -> untyped
+
+  def gather_fileinfo_from_srcpath: (untyped src_path) -> untyped
+
+  def write_to_zip_output_stream: (untyped zip_output_stream) -> untyped
+
+  def parent_as_string: () -> untyped
+
+  def get_raw_input_stream: () { (untyped) -> untyped } -> untyped
+
+  def clean_up: () -> untyped
+
+  def set_time: (untyped binary_dos_date, untyped binary_dos_time) -> untyped
+
+  def create_file: (untyped dest_path, ?untyped _continue_on_exists_proc) { (untyped, untyped) -> untyped } -> untyped
+
+  def create_directory: (untyped dest_path) { (untyped, untyped) -> untyped } -> untyped
+
+  # BUG: create_symlink() does not use &block
+  def create_symlink: (untyped dest_path) -> untyped
+
+  def parse_zip64_extra: (untyped for_local_header) -> untyped
+
+  def data_descriptor_size: () -> untyped
+
+  def prep_zip64_extra: (untyped for_local_header) -> untyped
+end
+
+Zip::Entry::STORED: Integer
+
+Zip::Entry::DEFLATED: Integer
+
+# Language encoding flag (EFS) bit
+Zip::Entry::EFS: Integer
+
+
+class Zip::EntrySet
+  # nodoc:all
+  include Enumerable
+
+  attr_accessor entry_set: untyped
+
+  attr_accessor entry_order: untyped
+
+  def initialize: (?untyped an_enumerable) -> untyped
+
+  def include?: (untyped entry) -> untyped
+
+  def find_entry: (untyped entry) -> untyped
+
+  def <<: (untyped entry) -> untyped
+
+  def size: () -> untyped
+
+  def delete: (untyped entry) -> untyped
+
+  def each: () { (untyped) -> untyped } -> untyped
+
+  def entries: () -> untyped
+
+  # deep clone
+  def dup: () -> untyped
+
+  def ==: (untyped other) -> untyped
+
+  def parent: (untyped entry) -> untyped
+
+  def glob: (untyped pattern, ?untyped flags) { (untyped) -> untyped } -> untyped
+
+  def sorted_entries: () -> untyped
+
+  def to_key: (untyped entry) -> untyped
+end
+
+
+class Zip::Error < StandardError
+end
+
+class Zip::EntryExistsError < Error
+end
+
+class Zip::DestinationFileExistsError < Error
+end
+
+class Zip::CompressionMethodError < Error
+end
+
+class Zip::EntryNameError < Error
+end
+
+class Zip::EntrySizeError < Error
+end
+
+class Zip::InternalError < Error
+end
+
+class Zip::GPFBit3Error < Error
+end
+
+class Zip::DecompressionError < Error
+end
+
+# Backwards compatibility with v1 (delete in v2)
+Zip::ZipError: untyped
+
+Zip::ZipEntryExistsError: untyped
+
+Zip::ZipDestinationFileExistsError: untyped
+
+Zip::ZipCompressionMethodError: untyped
+
+Zip::ZipEntryNameError: untyped
+
+Zip::ZipInternalError: untyped
+
+
+class Zip::ExtraField::Generic
+  def self.register_map: () -> untyped
+
+  def self.name: () -> untyped
+
+  # return field [size, content] or false
+  def initial_parse: (untyped binstr) -> untyped
+
+  def ==: (untyped other) -> untyped
+
+  def to_local_bin: () -> untyped
+
+  def to_c_dir_bin: () -> untyped
+end
+
+
+# PKWARE NTFS Extra Field (0x000a)
+# Only Tag 0x0001 is supported
+class Zip::ExtraField::NTFS < ExtraField::Generic
+  def initialize: (?untyped? binstr) -> untyped
+
+  attr_accessor atime: untyped
+
+  attr_accessor ctime: untyped
+
+  attr_accessor mtime: untyped
+
+  def merge: (untyped binstr) -> untyped
+
+  def ==: (untyped other) -> untyped
+
+  # Info-ZIP note states this extra field is stored at local header
+  def pack_for_local: () -> untyped
+
+  # But 7-zip for Windows only stores at central dir
+  def pack_for_c_dir: () -> untyped
+
+  def parse_tags: (untyped content) -> untyped
+
+  def from_ntfs_time: (untyped ntfs_time) -> untyped
+
+  def to_ntfs_time: (untyped time) -> untyped
+end
+
+Zip::ExtraField::NTFS::HEADER_ID: untyped
+
+Zip::ExtraField::NTFS::WINDOWS_TICK: Float
+
+Zip::ExtraField::NTFS::SEC_TO_UNIX_EPOCH: Integer
+
+
+# Olf Info-ZIP Extra for UNIX uid/gid and file timestampes
+class Zip::ExtraField::OldUnix < ExtraField::Generic
+  def initialize: (?untyped? binstr) -> untyped
+
+  attr_accessor uid: untyped
+
+  attr_accessor gid: untyped
+
+  attr_accessor atime: untyped
+
+  attr_accessor mtime: untyped
+
+  def merge: (untyped binstr) -> untyped
+
+  def ==: (untyped other) -> untyped
+
+  def pack_for_local: () -> untyped
+
+  def pack_for_c_dir: () -> untyped
+end
+
+Zip::ExtraField::OldUnix::HEADER_ID: String
+
+
+class Zip::ExtraField < Hash
+  def initialize: (?untyped? binstr) -> untyped
+
+  def extra_field_type_exist: (untyped binstr, untyped id, untyped len, untyped i) -> untyped
+
+  def extra_field_type_unknown: (untyped binstr, untyped len, untyped i) -> untyped
+
+  def create_unknown_item: () -> untyped
+
+  def merge: (untyped binstr) -> untyped
+
+  def create: (untyped name) -> untyped
+
+  # place Unknown last, so "extra" data that is missing the proper signature/size
+  # does not prevent known fields from being read back in
+  def ordered_values: () -> untyped
+
+  def to_local_bin: () -> untyped
+
+  def to_c_dir_bin: () -> untyped
+
+  def c_dir_size: () -> untyped
+
+  def local_size: () -> untyped
+end
+
+Zip::ExtraField::ID_MAP: Hash[untyped, untyped]
+
+
+# Info-ZIP Additional timestamp field
+class Zip::ExtraField::UniversalTime < ExtraField::Generic
+  def initialize: (?untyped? binstr) -> untyped
+
+  attr_reader atime: untyped
+
+  attr_reader ctime: untyped
+
+  attr_reader mtime: untyped
+
+  attr_reader flag: untyped
+
+  def atime=: (untyped time) -> untyped
+
+  def ctime=: (untyped time) -> untyped
+
+  def mtime=: (untyped time) -> untyped
+
+  def merge: (untyped binstr) -> untyped
+
+  def ==: (untyped other) -> untyped
+
+  def pack_for_local: () -> untyped
+
+  def pack_for_c_dir: () -> untyped
+end
+
+Zip::ExtraField::UniversalTime::HEADER_ID: String
+
+Zip::ExtraField::UniversalTime::ATIME_MASK: Integer
+
+Zip::ExtraField::UniversalTime::CTIME_MASK: Integer
+
+Zip::ExtraField::UniversalTime::MTIME_MASK: Integer
+
+
+# Info-ZIP Extra for UNIX uid/gid
+class Zip::ExtraField::IUnix < ExtraField::Generic
+  def initialize: (?untyped? binstr) -> untyped
+
+  attr_accessor uid: untyped
+
+  attr_accessor gid: untyped
+
+  def merge: (untyped binstr) -> untyped
+
+  def ==: (untyped other) -> untyped
+
+  def pack_for_local: () -> untyped
+
+  def pack_for_c_dir: () -> untyped
+end
+
+Zip::ExtraField::IUnix::HEADER_ID: String
+
+
+# placeholder to reserve space for a Zip64 extra information record, for the
+# local file header only, that we won't know if we'll need until after
+# we write the file data
+class Zip::ExtraField::Zip64Placeholder < ExtraField::Generic
+  def initialize: (?untyped? _binstr) -> untyped
+
+  def pack_for_local: () -> untyped
+end
+
+Zip::ExtraField::Zip64Placeholder::HEADER_ID: untyped
+
+
+# Info-ZIP Extra for Zip64 size
+class Zip::ExtraField::Zip64 < ExtraField::Generic
+  attr_accessor original_size: untyped
+
+  attr_accessor compressed_size: untyped
+
+  attr_accessor relative_header_offset: untyped
+
+  attr_accessor disk_start_number: untyped
+
+  def initialize: (?untyped? binstr) -> untyped
+
+  def ==: (untyped other) -> untyped
+
+  def merge: (untyped binstr) -> untyped
+
+  # pass the values from the base entry (if applicable)
+  # wider values are only present in the extra field for base values set to all FFs
+  # returns the final values for the four attributes (from the base or zip64 extra record)
+  def parse: (untyped original_size, untyped compressed_size, ?untyped? relative_header_offset, ?untyped? disk_start_number) -> untyped
+
+  def extract: (untyped size, untyped format) -> untyped
+
+  def pack_for_local: () -> untyped
+
+  def pack_for_c_dir: () -> untyped
+end
+
+Zip::ExtraField::Zip64::HEADER_ID: untyped
+
+
+class Zip::File < CentralDirectory
+  attr_reader name: untyped
+
+  # default -> false.
+  attr_accessor restore_ownership: untyped
+
+  # default -> false, but will be set to true in a future version.
+  attr_accessor restore_permissions: untyped
+
+  # default -> false, but will be set to true in a future version.
+  attr_accessor restore_times: untyped
+
+  # Returns the zip files comment, if it has one
+  attr_accessor comment: untyped
+
+  # Opens a zip archive. Pass true as the second parameter to create
+  # a new archive if it doesn't exist already.
+  def initialize: (untyped path_or_io, ?bool create, ?bool buffer, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Similar to ::new. If a block is passed the Zip::File object is passed
+  # to the block and is automatically closed afterwards, just as with
+  # ruby's builtin File::open method.
+  def self.open: (untyped file_name, ?bool create, ?::Hash[untyped, untyped] options) { (untyped) -> untyped } -> untyped
+
+  # Same as #open. But outputs data to a buffer instead of a file
+  def self.add_buffer: () { (untyped) -> untyped } -> untyped
+
+  # Like #open, but reads zip archive contents from a String or open IO
+  # stream, and outputs data to a buffer.
+  # (This can be used to extract data from a
+  # downloaded zip archive without first saving it to disk.)
+  def self.open_buffer: (untyped io, ?::Hash[untyped, untyped] options) { (untyped) -> untyped } -> untyped
+
+  # Iterates over the contents of the ZipFile. This is more efficient
+  # than using a ZipInputStream since this methods simply iterates
+  # through the entries in the central directory structure in the archive
+  # whereas ZipInputStream jumps through the entire archive accessing the
+  # local entry headers (which contain the same information as the
+  # central directory).
+  def self.foreach: (untyped aZipFileName) { () -> untyped } -> untyped
+
+  def self.get_segment_size_for_split: (untyped segment_size) -> untyped
+
+  def self.get_partial_zip_file_name: (untyped zip_file_name, untyped partial_zip_file_name) -> untyped
+
+  def self.get_segment_count_for_split: (untyped zip_file_size, untyped segment_size) -> untyped
+
+  def self.put_split_signature: (untyped szip_file, untyped segment_size) -> untyped
+
+  #
+  # TODO: Make the code more understandable
+  #
+  def self.save_splited_part: (untyped zip_file, untyped partial_zip_file_name, untyped zip_file_size, untyped szip_file_index, untyped segment_size, untyped segment_count) { (untyped, untyped, untyped, untyped) -> untyped } -> untyped
+
+  # Splits an archive into parts with segment size
+  def self.split: (untyped zip_file_name, ?untyped segment_size, ?bool delete_zip_file, ?untyped? partial_zip_file_name) -> untyped
+
+  # Returns an input stream to the specified entry. If a block is passed
+  # the stream object is passed to the block and the stream is automatically
+  # closed afterwards just as with ruby's builtin File.open method.
+  def get_input_stream: (untyped entry) { () -> untyped } -> untyped
+
+  # Returns an output stream to the specified entry. If entry is not an instance
+  # of Zip::Entry, a new Zip::Entry will be initialized using the arguments
+  # specified. If a block is passed the stream object is passed to the block and
+  # the stream is automatically closed afterwards just as with ruby's builtin
+  # File.open method.
+  def get_output_stream: (untyped entry, ?untyped? permission_int, ?untyped? comment, ?untyped? extra, ?untyped? compressed_size, ?untyped? crc, ?untyped? compression_method, ?untyped? size, ?untyped? time) { () -> untyped } -> untyped
+
+  # Returns the name of the zip archive
+  def to_s: () -> untyped
+
+  # Returns a string containing the contents of the specified entry
+  def read: (untyped entry) -> untyped
+
+  # Convenience method for adding the contents of a file to the archive
+  def add: (untyped entry, untyped src_path) { () -> untyped } -> untyped
+
+  # Convenience method for adding the contents of a file to the archive
+  # in Stored format (uncompressed)
+  def add_stored: (untyped entry, untyped src_path) { () -> untyped } -> untyped
+
+  # Removes the specified entry.
+  def remove: (untyped entry) -> untyped
+
+  # Renames the specified entry.
+  def rename: (untyped entry, untyped new_name) { () -> untyped } -> untyped
+
+  # Replaces the specified entry with the contents of srcPath (from
+  # the file system).
+  def replace: (untyped entry, untyped srcPath) -> untyped
+
+  # Extracts entry to file dest_path.
+  def extract: (untyped entry, untyped dest_path) { () -> untyped } -> untyped
+
+  # Commits changes that has been made since the previous commit to
+  # the zip archive.
+  def commit: () -> untyped
+
+  # Write buffer write changes to buffer and return
+  def write_buffer: (?untyped io) -> untyped
+
+  # Closes the zip file committing any changes that has been made.
+  def close: () -> untyped
+
+  # Returns true if any changes has been made to this archive since
+  # the previous commit
+  def commit_required?: () -> untyped
+
+  # Searches for entry with the specified name. Returns nil if
+  # no entry is found. See also get_entry
+  def find_entry: (untyped entry_name) -> untyped
+
+  # Searches for entries given a glob
+  def glob: (*untyped args) { () -> untyped } -> untyped
+
+  # Searches for an entry just as find_entry, but throws Errno::ENOENT
+  # if no entry is found.
+  def get_entry: (untyped entry) -> untyped
+
+  # Creates a directory
+  def mkdir: (untyped entryName, ?Integer permissionInt) -> untyped
+
+  def directory?: (untyped newEntry, untyped srcPath) -> untyped
+
+  def check_entry_exists: (untyped entryName, untyped continue_on_exists_proc, untyped procedureName) -> untyped
+
+  def check_file: (untyped path) -> untyped
+
+  def on_success_replace: () { (untyped) -> untyped } -> untyped
+end
+
+Zip::File::CREATE: bool
+
+Zip::File::SPLIT_SIGNATURE: Integer
+
+Zip::File::ZIP64_EOCD_SIGNATURE: Integer
+
+Zip::File::MAX_SEGMENT_SIZE: Integer
+
+Zip::File::MIN_SEGMENT_SIZE: Integer
+
+Zip::File::DATA_BUFFER_SIZE: Integer
+
+Zip::File::IO_METHODS: Array[untyped]
+
+Zip::File::DEFAULT_OPTIONS: untyped
+
+
+module Zip::FileSystem
+  def initialize: () -> untyped
+
+  # Returns a ZipFsDir which is much like ruby's builtin Dir (class)
+  # object, except it works on the Zip::File on which this method is
+  # invoked
+  def dir: () -> untyped
+
+  # Returns a ZipFsFile which is much like ruby's builtin File (class)
+  # object, except it works on the Zip::File on which this method is
+  # invoked
+  def file: () -> untyped
+end
+
+# Instances of this class are normally accessed via the accessor
+# Zip::File::file. An instance of ZipFsFile behaves like ruby's
+# builtin File (class) object, except it works on Zip::File entries.
+#
+# The individual methods are not documented due to their
+# similarity with the methods in File
+class Zip::FileSystem::ZipFsFile
+  attr_writer dir: untyped
+
+  def initialize: (untyped mappedZip) -> untyped
+
+  def get_entry: (untyped fileName) -> untyped
+
+  def unix_mode_cmp: (untyped fileName, untyped mode) -> untyped
+
+  def exists?: (untyped fileName) -> untyped
+
+  def readable?: (untyped fileName) -> untyped
+
+  def writable?: (untyped fileName) -> untyped
+
+  def executable?: (untyped fileName) -> untyped
+
+  def setuid?: (untyped fileName) -> untyped
+
+  def setgid?: (untyped fileName) -> untyped
+
+  def sticky?: (untyped fileName) -> untyped
+
+  def umask: (*untyped args) -> untyped
+
+  def truncate: (untyped _fileName, untyped _len) -> untyped
+
+  def directory?: (untyped fileName) -> untyped
+
+  def open: (untyped fileName, ?::String openMode, ?Integer permissionInt) { () -> untyped } -> untyped
+
+  def new: (untyped fileName, ?::String openMode) -> untyped
+
+  def size: (untyped fileName) -> untyped
+
+  # Returns nil for not found and nil for directories
+  def size?: (untyped fileName) -> untyped
+
+  def chown: (untyped ownerInt, untyped groupInt, *untyped filenames) -> untyped
+
+  def chmod: (untyped modeInt, *untyped filenames) -> untyped
+
+  def zero?: (untyped fileName) -> untyped
+
+  def file?: (untyped fileName) -> untyped
+
+  def dirname: (untyped fileName) -> untyped
+
+  def basename: (untyped fileName) -> untyped
+
+  def split: (untyped fileName) -> untyped
+
+  def join: (*untyped fragments) -> untyped
+
+  def utime: (untyped modifiedTime, *untyped fileNames) -> untyped
+
+  def mtime: (untyped fileName) -> untyped
+
+  def atime: (untyped fileName) -> untyped
+
+  def ctime: (untyped fileName) -> untyped
+
+  def pipe?: (untyped _filename) -> untyped
+
+  def blockdev?: (untyped _filename) -> untyped
+
+  def chardev?: (untyped _filename) -> untyped
+
+  def symlink?: (untyped _fileName) -> untyped
+
+  def socket?: (untyped _fileName) -> untyped
+
+  def ftype: (untyped fileName) -> untyped
+
+  def readlink: (untyped _fileName) -> untyped
+
+  def symlink: (untyped _fileName, untyped _symlinkName) -> untyped
+
+  def link: (untyped _fileName, untyped _symlinkName) -> untyped
+
+  def pipe: () -> untyped
+
+  def stat: (untyped fileName) -> untyped
+
+  def readlines: (untyped fileName) -> untyped
+
+  def read: (untyped fileName) -> untyped
+
+  def popen: (*untyped args) { () -> untyped } -> untyped
+
+  def foreach: (untyped fileName, ?untyped aSep) { () -> untyped } -> untyped
+
+  def delete: (*untyped args) -> untyped
+
+  def rename: (untyped fileToRename, untyped newName) -> untyped
+
+  def expand_path: (untyped aPath) -> untyped
+end
+
+class Zip::FileSystem::ZipFsFile::ZipFsStat
+  def self.delegate_to_fs_file: (*untyped methods) -> untyped
+
+  def initialize: (untyped zipFsFile, untyped entryName) -> untyped
+
+  def kind_of?: (untyped t) -> untyped
+
+  def blocks: () -> untyped
+
+  def get_entry: () -> untyped
+
+  def gid: () -> untyped
+
+  def uid: () -> untyped
+
+  def ino: () -> untyped
+
+  def dev: () -> untyped
+
+  def rdev: () -> untyped
+
+  def rdev_major: () -> untyped
+
+  def rdev_minor: () -> untyped
+
+  def ftype: () -> untyped
+
+  def nlink: () -> untyped
+
+  def blksize: () -> untyped
+
+  def mode: () -> untyped
+end
+
+# Instances of this class are normally accessed via the accessor
+# ZipFile::dir. An instance of ZipFsDir behaves like ruby's
+# builtin Dir (class) object, except it works on ZipFile entries.
+#
+# The individual methods are not documented due to their
+# similarity with the methods in Dir
+class Zip::FileSystem::ZipFsDir
+  def initialize: (untyped mappedZip) -> untyped
+
+  attr_writer file: untyped
+
+  def new: (untyped aDirectoryName) -> untyped
+
+  def open: (untyped aDirectoryName) { (untyped) -> untyped } -> untyped
+
+  def pwd: () -> untyped
+
+  def chdir: (untyped aDirectoryName) -> untyped
+
+  def entries: (untyped aDirectoryName) -> untyped
+
+  def glob: (*untyped args) { () -> untyped } -> untyped
+
+  def foreach: (untyped aDirectoryName) { (untyped) -> untyped } -> untyped
+
+  def delete: (untyped entryName) -> untyped
+
+  def mkdir: (untyped entryName, ?Integer permissionInt) -> untyped
+
+  def chroot: (*untyped _args) -> untyped
+end
+
+class Zip::FileSystem::ZipFsDirIterator
+  # :nodoc:all
+  include Enumerable
+
+  def initialize: (untyped arrayOfFileNames) -> untyped
+
+  def close: () -> untyped
+
+  def each: () { () -> untyped } -> untyped
+
+  def read: () -> untyped
+
+  def rewind: () -> untyped
+
+  def seek: (untyped anIntegerPosition) -> untyped
+
+  def tell: () -> untyped
+end
+
+class Zip::FileSystem::ZipFileNameMapper
+  # All access to Zip::File from ZipFsFile and ZipFsDir goes through a
+  # ZipFileNameMapper, which has one responsibility: ensure
+  # :nodoc:all
+  include Enumerable
+
+  def initialize: (untyped zipFile) -> untyped
+
+  attr_accessor pwd: untyped
+
+  def find_entry: (untyped fileName) -> untyped
+
+  def get_entry: (untyped fileName) -> untyped
+
+  def get_input_stream: (untyped fileName) { () -> untyped } -> untyped
+
+  def get_output_stream: (untyped fileName, ?untyped? permissionInt) { () -> untyped } -> untyped
+
+  def glob: (untyped pattern, *untyped flags) { () -> untyped } -> untyped
+
+  def read: (untyped fileName) -> untyped
+
+  def remove: (untyped fileName) -> untyped
+
+  def rename: (untyped fileName, untyped newName) { () -> untyped } -> untyped
+
+  def mkdir: (untyped fileName, ?Integer permissionInt) -> untyped
+
+  # Turns entries into strings and adds leading /
+  # and removes trailing slash on directories
+  def each: () { (untyped) -> untyped } -> untyped
+
+  def expand_path: (untyped aPath) -> untyped
+
+  def expand_to_entry: (untyped aPath) -> untyped
+end
+
+class Zip::File
+  include FileSystem
+end
+
+
+class Zip::Inflater < Decompressor
+  # nodoc:all
+  def initialize: (*untyped args) -> untyped
+
+  def read: (?untyped? length, ?::String outbuf) -> untyped
+
+  def eof: () -> untyped
+
+  def produce_input: () -> untyped
+
+  def input_finished?: () -> untyped
+end
+
+
+class Zip::InputStream
+  include ::Zip::IOExtras::AbstractInputStream
+
+  # Opens the indicated zip file. An exception is thrown
+  # if the specified offset in the specified filename is
+  # not a local zip entry header.
+  #
+  # @param context [String||IO||StringIO] file path or IO/StringIO object
+  # @param offset [Integer] offset in the IO/StringIO
+  def initialize: (untyped context, ?Integer offset, ?untyped? decrypter) -> untyped
+
+  def close: () -> untyped
+
+  # Returns a Entry object. It is necessary to call this
+  # method on a newly created InputStream before reading from
+  # the first entry in the archive. Returns nil when there are
+  # no more entries.
+  def get_next_entry: () -> untyped
+
+  # Rewinds the stream to the beginning of the current entry
+  def rewind: () -> untyped
+
+  # Modeled after IO.sysread
+  def sysread: (?untyped? length, ?::String outbuf) -> untyped
+
+  # Same as #initialize but if a block is passed the opened
+  # stream is passed to the block and closed when the block
+  # returns.
+  def self.open: (untyped filename_or_io, ?Integer offset, ?untyped? decrypter) { (untyped) -> untyped } -> untyped
+
+  def self.open_buffer: (untyped filename_or_io, ?Integer offset) -> untyped
+
+  def get_io: (untyped io_or_file, ?Integer offset) -> untyped
+
+  def open_entry: () -> untyped
+
+  def get_decrypted_io: () -> untyped
+
+  def get_decompressor: () -> untyped
+
+  def produce_input: () -> untyped
+
+  def input_finished?: () -> untyped
+end
+
+Zip::InputStream::CHUNK_SIZE: Integer
+
+
+module Zip::IOExtras
+end
+
+# Implements many of the convenience methods of IO
+# such as gets, getc, readline and readlines
+# depends on: input_finished?, produce_input and read
+module Zip::IOExtras::AbstractInputStream
+  include Enumerable
+
+  include FakeIO
+
+  def initialize: () -> untyped
+
+  attr_accessor lineno: untyped
+
+  attr_reader pos: untyped
+
+  def read: (?untyped? number_of_bytes, ?::String buf) -> untyped
+
+  def readlines: (?untyped a_sep_string) -> untyped
+
+  def gets: (?untyped a_sep_string, ?untyped? number_of_bytes) -> untyped
+
+  def ungetc: (untyped byte) -> untyped
+
+  def flush: () -> untyped
+
+  def readline: (?untyped a_sep_string) -> untyped
+
+  def each_line: (?untyped a_sep_string) { (untyped) -> untyped } -> untyped
+
+  def eof: () -> untyped
+end
+
+
+module Zip::IOExtras
+end
+
+# Implements many of the output convenience methods of IO.
+# relies on <<
+module Zip::IOExtras::AbstractOutputStream
+  include FakeIO
+
+  def write: (untyped data) -> untyped
+
+  def print: (*untyped params) -> untyped
+
+  def printf: (untyped a_format_string, *untyped params) -> untyped
+
+  def putc: (untyped an_object) -> untyped
+
+  def puts: (*untyped params) -> untyped
+end
+
+
+module Zip::IOExtras
+  def self.copy_stream: (untyped ostream, untyped istream) -> untyped
+
+  def self.copy_stream_n: (untyped ostream, untyped istream, untyped nbytes) -> untyped
+end
+
+# nodoc:
+Zip::IOExtras::CHUNK_SIZE: Integer
+
+Zip::IOExtras::RANGE_ALL: untyped
+
+# Implements kind_of? in order to pretend to be an IO object
+module Zip::IOExtras::FakeIO
+  def kind_of?: (untyped object) -> untyped
+end
+
+
+class Zip::NullCompressor < Compressor
+  # nodoc:all
+  include Singleton
+
+  def <<: (untyped _data) -> untyped
+
+  attr_reader size: untyped
+
+  attr_reader compressed_size: untyped
+end
+
+
+module Zip::NullDecompressor
+  def read: (?untyped? _length, ?untyped? _outbuf) -> untyped
+
+  def eof: () -> untyped
+end
+
+
+module Zip::NullInputStream
+  # nodoc:all
+  include ::Zip::NullDecompressor
+
+  include ::Zip::IOExtras::AbstractInputStream
+end
+
+
+class Zip::OutputStream
+  include ::Zip::IOExtras::AbstractOutputStream
+
+  attr_accessor comment: untyped
+
+  # Opens the indicated zip file. If a file with that name already
+  # exists it will be overwritten.
+  def initialize: (untyped file_name, ?bool stream, ?untyped? encrypter) -> untyped
+
+  def self.open: (untyped file_name, ?untyped? encrypter) { (untyped) -> untyped } -> untyped
+
+  # Same as #open but writes to a filestream instead
+  def self.write_buffer: (?untyped io, ?untyped? encrypter) { (untyped) -> untyped } -> untyped
+
+  # Closes the stream and writes the central directory to the zip file
+  def close: () -> untyped
+
+  # Closes the stream and writes the central directory to the zip file
+  def close_buffer: () -> untyped
+
+  # Closes the current entry and opens a new for writing.
+  # +entry+ can be a ZipEntry object or a string.
+  def put_next_entry: (untyped entry_name, ?untyped? comment, ?untyped? extra, ?untyped compression_method, ?untyped level) -> untyped
+
+  def copy_raw_entry: (untyped entry) -> untyped
+
+  def finalize_current_entry: () -> untyped
+
+  def init_next_entry: (untyped entry, ?untyped level) -> untyped
+
+  def get_compressor: (untyped entry, untyped level) -> untyped
+
+  def update_local_headers: () -> untyped
+
+  def write_central_directory: () -> untyped
+
+  def finish: () -> untyped
+
+  # Modeled after IO.<<
+  def <<: (untyped data) -> untyped
+end
+
+
+class Zip::PassThruCompressor < Compressor
+  # nodoc:all
+  def initialize: (untyped outputStream) -> untyped
+
+  def <<: (untyped data) -> untyped
+
+  attr_reader size: untyped
+
+  attr_reader crc: untyped
+end
+
+
+class Zip::PassThruDecompressor < Decompressor
+  # nodoc:all
+  def initialize: (*untyped args) -> untyped
+
+  def read: (?untyped? length, ?::String outbuf) -> untyped
+
+  def eof: () -> untyped
+end
+
+
+class Zip::StreamableDirectory < Entry
+  def initialize: (untyped zipfile, untyped entry, ?untyped? srcPath, ?untyped? permissionInt) -> untyped
+end
+
+class Zip::StreamableStream
+  # nodoc:all
+  def initialize: (untyped entry) -> untyped
+
+  def get_output_stream: () { (untyped) -> untyped } -> untyped
+
+  def get_input_stream: () { (untyped) -> untyped } -> untyped
+
+  def write_to_zip_output_stream: (untyped aZipOutputStream) -> untyped
+
+  def clean_up: () -> untyped
+end
+
+
+Zip::VERSION::String
