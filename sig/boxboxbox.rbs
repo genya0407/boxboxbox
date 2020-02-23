@@ -1,0 +1,28 @@
+module Boxboxbox
+end
+
+class Boxboxbox::Image
+  attr_reader name: String
+  attr_reader pathname: Pathname
+
+  def initialize: (name: String, pathname: Pathname) -> untyped
+end
+
+class Boxboxbox::Point
+  attr_reader x: Float
+  attr_reader y: Float
+
+  def initialize: (x: Float x, y: Float y) -> untyped
+end
+
+class Boxboxbox::Box
+  attr_reader image_name: String
+  attr_reader top_left: Point
+  attr_reader bottom_right: Point
+
+  def initialize: (image_name: String, top_left: Point, bottom_right: Point) -> untyped
+end
+
+class Boxboxbox::Unzipper
+  def unzip: (zip_path: Pathname) -> _Each[Boxboxbox::Image, untyped]
+end
