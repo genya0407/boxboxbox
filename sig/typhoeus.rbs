@@ -1,0 +1,1802 @@
+module Rack::Typhoeus::Middleware::ParamsDecoder::Helper
+  # Recursively decodes Typhoeus encoded arrays in given Hash.
+  #
+  # @example Use directly in a Rails controller.
+  #    class ApplicationController
+  #       before_filter :decode_typhoeus_arrays
+  #    end
+  #
+  # @author Dwayne Macgowan
+  #
+  def decode_typhoeus_arrays: () -> untyped
+
+  # Recursively decodes Typhoeus encoded arrays in given Hash.
+  #
+  # @param hash [Hash]. This Hash will be modified!
+  #
+  # @return [Hash] Hash with properly decoded nested arrays.
+  def decode!: (untyped hash) -> untyped
+
+  def decode: (untyped hash) -> untyped
+
+  # Checks if Hash is an Array encoded as a Hash.
+  # Specifically will check for the Hash to have this
+  # form: {'0' => v0, '1' => v1, .., 'n' => vN }
+  #
+  # @param hash [Hash]
+  #
+  # @return [Boolean] True if its a encoded Array, else false.
+  def encoded?: (untyped hash) -> untyped
+
+  # If the Hash is an array encoded by typhoeus an array is returned
+  # else the self is returned
+  #
+  # @param hash [Hash] The Hash to convert into an Array.
+  #
+  # @return [Arraya/Hash]
+  def convert: (untyped hash) -> untyped
+end
+
+# This Rack middleware takes care of the proper deserialization of
+# the nested params encoded by Typhoeus.
+#
+# @example Require the railtie when using Rails.
+#   require 'typhoeus/railtie'
+#
+# @example Include the middleware for Rack based applications.
+#   use Rack::Typhoeus::Middleware::ParamsDecoder
+#
+# @example Use the helper directly. Not recommended as b/c the interface might change.
+#   require 'rack/typhoeus/middleware/params_decoder/helper'
+#   include Rack::Typhoeus::Middleware::ParamsDecoder::Helper
+#   decode!(params)
+#
+# @author Dwayne Macgowan
+# @since 0.5.4
+class Rack::Typhoeus::Middleware::ParamsDecoder
+  include ParamsDecoder::Helper
+
+  def initialize: (untyped app) -> untyped
+
+  def call: (untyped env) -> untyped
+
+  # Persist params change in environment. Extracted from:
+  # https://github.com/rack/rack/blob/master/lib/rack/request.rb#L243
+  def update_params: (untyped req, untyped k, untyped v) -> untyped
+end
+
+module Faraday
+end
+
+class Faraday::Adapter
+end
+
+# Adapter to use Faraday with Typhoeus.
+#
+# @example Use Typhoeus.
+#   require 'faraday'
+#   require 'typhoeus'
+#   require 'typhoeus/adapters/faraday'
+#
+#   conn = Faraday.new(url: "www.example.com") do |faraday|
+#     faraday.adapter :typhoeus
+#
+#     # You can include Typhoeus options to be used for every request
+#     # faraday.adapter :typhoeus, forbid_reuse: true, maxredirs: 1
+#   end
+#
+#   response = conn.get("/")
+class Faraday::Adapter::Typhoeus < Faraday::Adapter
+  # Initialize the Typhoeus adapter
+  #
+  # @param [ App ] app Farday app
+  # @option [ Hash ] adapter_options Typhoeus options
+  #
+  # @return [ void ]
+  def initialize: (untyped app, ?::Hash[untyped, untyped] adapter_options) -> untyped
+
+  # Setup Hydra with provided options.
+  #
+  # @example Setup Hydra.
+  #   Faraday::Adapter::Typhoeus.setup_parallel_manager
+  #   #=> #<Typhoeus::Hydra ... >
+  #
+  # @param (see Typhoeus::Hydra#initialize)
+  # @option (see Typhoeus::Hydra#initialize)
+  #
+  # @return [ Typhoeus::Hydra ] The hydra.
+  def self.setup_parallel_manager: (?::Hash[untyped, untyped] options) -> untyped
+
+  # Hook into Faraday and perform the request with Typhoeus.
+  #
+  # @param [ Hash ] env The environment.
+  #
+  # @return [ void ]
+  def call: (untyped env) -> untyped
+
+  def perform_request: (untyped env) -> untyped
+
+  def request: (untyped env) -> untyped
+
+  def typhoeus_request: (untyped env) -> untyped
+
+  def read_body: (untyped env) -> untyped
+
+  def configure_ssl: (untyped req, untyped env) -> untyped
+
+  def configure_proxy: (untyped req, untyped env) -> untyped
+
+  def configure_timeout: (untyped req, untyped env) -> untyped
+
+  def configure_socket: (untyped req, untyped env) -> untyped
+
+  def parallel?: (untyped env) -> untyped
+end
+
+# This module provides a simple way to cache HTTP responses using Dalli.
+class Typhoeus::Cache::Dalli
+  # @example Set Dalli as the Typhoeus cache backend
+  #   Typhoeus::Config.cache = Typhoeus::Cache::Dalli.new
+  #
+  # @param [ Dalli::Client ] client
+  #   A connection to the cache server. Defaults to `Dalli::Client.new`
+  # @param [ Integer ] default_ttl
+  #   The default TTL of cached responses in seconds, for requests which do not set a cache_ttl.
+  def initialize: (?untyped client, ?::Hash[untyped, untyped] options) -> untyped
+
+  def get: (untyped request) -> untyped
+
+  def set: (untyped request, untyped response) -> untyped
+end
+
+# This module provides a simple way to cache HTTP responses in using the Rails cache.
+class Typhoeus::Cache::Rails
+  # @example Use the Rails cache setup to cache Typhoeus responses.
+  #   Typhoeus::Config.cache = Typhoeus::Cache::Rails.new
+  #
+  # @param [ ActiveSupport::Cache::Store ] cache
+  #   A Rails cache backend. Defaults to Rails.cache.
+  # @param [ Integer ] default_ttl
+  #   The default TTL of cached responses in seconds, for requests which do not set a cache_ttl.
+  def initialize: (?untyped cache, ?::Hash[untyped, untyped] options) -> untyped
+
+  def get: (untyped request) -> untyped
+
+  def set: (untyped request, untyped response) -> untyped
+end
+
+# This module provides a simple way to cache HTTP responses in Redis.
+class Typhoeus::Cache::Redis
+  # @example Set Redis as the Typhoeus cache backend
+  #   Typhoeus::Config.cache = Typhoeus::Cache::Redis.new
+  #
+  # @param [ Redis ] redis
+  #   A connection to Redis. Defaults to `Redis.new`, which uses the
+  #   `REDIS_URL` environment variable to connect
+  # @param [ Integer ] default_ttl
+  #   The default TTL of cached responses in seconds, for requests which do not set a cache_ttl.
+  def initialize: (?untyped redis, ?::Hash[untyped, untyped] options) -> untyped
+
+  def get: (untyped request) -> untyped
+
+  def set: (untyped request, untyped response) -> untyped
+end
+
+# The Typhoeus configuration used to set global
+# options.
+# @example Set the configuration options within a block.
+#   Typhoeus.configure do |config|
+#     config.verbose = true
+#   end
+#
+# @example Set the configuration directly.
+#   Typhoeus::Config.verbose = true
+module Typhoeus::Config
+  # Defines whether the connection is blocked.
+  # Defaults to false. When set to true, only
+  # stubbed requests are allowed. A
+  # {Typhoeus::Errors::NoStub} error is raised,
+  # when trying to do a real request. It's possible
+  # to work around inside
+  # {Typhoeus#with_connection}.
+  #
+  # @return [ Boolean ]
+  #
+  # @see Typhoeus::Request::BlockConnection
+  # @see Typhoeus::Hydra::BlockConnection
+  # @see Typhoeus#with_connection
+  # @see Typhoeus::Errors::NoStub
+  attr_accessor block_connection: untyped
+
+  # Defines whether GET requests are memoized when using the {Typhoeus::Hydra}.
+  #
+  # @return [ Boolean ]
+  #
+  # @see Typhoeus::Hydra
+  # @see Typhoeus::Hydra::Memoizable
+  attr_accessor memoize: untyped
+
+  # Defines whether curls debug output is shown.
+  # Unfortunately it prints to stderr.
+  #
+  # @return [ Boolean ]
+  #
+  # @see http://curl.haxx.se/libcurl/c/curl_easy_setopt.html#CURLOPTVERBOSE
+  attr_accessor verbose: untyped
+
+  # Defines whether requests are cached.
+  #
+  # @return [ Object ]
+  #
+  # @see Typhoeus::Hydra::Cacheable
+  # @see Typhoeus::Request::Cacheable
+  attr_accessor cache: untyped
+
+  # Defines whether to use a default user agent.
+  #
+  # @return [ String ]
+  #
+  # @see Typhoeus::Request#set_defaults
+  attr_accessor user_agent: untyped
+
+  # Defines wether to use a proxy server for every request.
+  #
+  # @return [ String ]
+  #
+  # @see Typhoeus::Request#set_defaults
+  attr_accessor proxy: untyped
+end
+
+# This is a Factory for easies to be used in the hydra.
+# Before an easy is ready to be added to a multi the
+# on_complete callback to be set.
+# This is done by this class.
+#
+# @api private
+class Typhoeus::EasyFactory
+  # Returns the request provided.
+  #
+  # @return [ Typhoeus::Request ]
+  attr_reader request: untyped
+
+  # Returns the hydra provided.
+  #
+  # @return [ Typhoeus::Hydra ]
+  attr_reader hydra: untyped
+
+  # Create an easy factory.
+  #
+  # @example Create easy factory.
+  #   Typhoeus::Hydra::EasyFactory.new(request, hydra)
+  #
+  # @param [ Request ] request The request to build an easy for.
+  # @param [ Hydra ] hydra The hydra to build an easy for.
+  def initialize: (untyped request, ?untyped? hydra) -> untyped
+
+  # Return the easy in question.
+  #
+  # @example Return easy.
+  #   easy_factory.easy
+  #
+  # @return [ Ethon::Easy ] The easy.
+  def easy: () -> untyped
+
+  # Fabricated easy.
+  #
+  # @example Prepared easy.
+  #   easy_factory.get
+  #
+  # @return [ Ethon::Easy ] The easy.
+  def get: () -> untyped
+
+  def sanitize: (untyped options) -> untyped
+
+  def sanitize_timeout!: (untyped options, untyped timeout) -> untyped
+
+  # Sets on_complete callback on easy in order to be able to
+  # track progress.
+  #
+  # @example Set callback.
+  #   easy_factory.set_callback
+  #
+  # @return [ Ethon::Easy ] The easy.
+  def set_callback: () -> untyped
+
+  def provide_help: (untyped option) -> untyped
+end
+
+Typhoeus::EasyFactory::RENAMED_OPTIONS: ::Hash[untyped, untyped]
+
+Typhoeus::EasyFactory::CHANGED_OPTIONS: ::Hash[untyped, untyped]
+
+Typhoeus::EasyFactory::REMOVED_OPTIONS: untyped
+
+Typhoeus::EasyFactory::SANITIZE_IGNORE: untyped
+
+Typhoeus::EasyFactory::SANITIZE_TIMEOUT: untyped
+
+# Raises when block connection is turned on
+# and making a real request.
+class Typhoeus::Errors::NoStub < TyphoeusError
+  def initialize: (untyped request) -> untyped
+end
+
+# Default typhoeus error class for all custom errors.
+class Typhoeus::Errors::TyphoeusError < StandardError
+end
+
+# This class represents an expectation. It is part
+# of the stubbing mechanism. An expectation contains
+# a url and options, like a request. They are compared
+# to the request url and options in order to evaluate
+# whether they match. If that's the case, the attached
+# responses are returned one by one.
+#
+# @example Stub a request and get specified response.
+#   expected = Typhoeus::Response.new
+#   Typhoeus.stub("www.example.com").and_return(expected)
+#
+#   actual = Typhoeus.get("www.example.com")
+#   expected == actual
+#   #=> true
+#
+# @example Stub a request and get a lazily-constructed response containing data from actual widgets that exist in the system when the stubbed request is made.
+#   Typhoeus.stub("www.example.com/widgets") do
+#     actual_widgets = Widget.all
+#     Typhoeus::Response.new(
+#       :body => actual_widgets.inject([]) do |ids, widget|
+#         ids << widget.id
+#       end.join(",")
+#     )
+#   end
+#
+# @example Stub a request and get a lazily-constructed response in the format requested.
+#   Typhoeus.stub("www.example.com") do |request|
+#     accept = (request.options[:headers]||{})['Accept'] || "application/json"
+#     format = accept.split(",").first
+#     body_obj = { 'things' => [ { 'id' => 'foo' } ] }
+#
+#     Typhoeus::Response.new(
+#       :headers => {
+#         'Content-Type' => format
+#       },
+#       :body => SERIALIZERS[format].serialize(body_obj)
+#     )
+#   end
+class Typhoeus::Expectation
+  # @api private
+  attr_reader base_url: untyped
+
+  # @api private
+  attr_reader options: untyped
+
+  # @api private
+  attr_reader from: untyped
+
+  # Returns all expectations.
+  #
+  # @example Return expectations.
+  #   Typhoeus::Expectation.all
+  #
+  # @return [ Array<Typhoeus::Expectation> ] The expectations.
+  def self.all: () -> untyped
+
+  # Clears expectations. This is handy while
+  # testing, and you want to make sure that
+  # you don't get canned responses.
+  #
+  # @example Clear expectations.
+  #   Typhoeus::Expectation.clear
+  def self.clear: () -> untyped
+
+  # Returns stubbed response matching the
+  # provided request.
+  #
+  # @example Find response
+  #   Typhoeus::Expectation.response_for(request)
+  #
+  # @return [ Typhoeus::Response ] The stubbed response from a
+  #   matching expectation, or nil if no matching expectation
+  #   is found.
+  #
+  # @api private
+  def self.response_for: (untyped request) -> untyped
+
+  # @api private
+  def self.find_by: (untyped request) -> untyped
+
+  # Creates an expectation.
+  #
+  # @example Create expectation.
+  #   Typhoeus::Expectation.new(base_url)
+  #
+  # @return [ Expectation ] The created expectation.
+  #
+  # @api private
+  def initialize: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Set from value to mark an expectaion. Useful for
+  # other libraries, e.g. WebMock.
+  #
+  # @example Mark expectation.
+  #   expectation.from(:webmock)
+  #
+  # @param [ String ] value Value to set.
+  #
+  # @return [ Expectation ] Returns self.
+  #
+  # @api private
+  def stubbed_from: (untyped value) -> untyped
+
+  # Specify what should be returned,
+  # when this expectation is hit.
+  #
+  # @example Add response.
+  #   expectation.and_return(response)
+  #
+  # @return [ void ]
+  def and_return: (?untyped? response) { () -> untyped } -> untyped
+
+  # Checks whether this expectation matches
+  # the provided request.
+  #
+  # @example Check if request matches.
+  #   expectation.matches? request
+  #
+  # @param [ Request ] request The request to check.
+  #
+  # @return [ Boolean ] True when matches, else false.
+  #
+  # @api private
+  def matches?: (untyped request) -> untyped
+
+  # Return canned responses.
+  #
+  # @example Return responses.
+  #   expectation.responses
+  #
+  # @return [ Array<Typhoeus::Response> ] The responses.
+  #
+  # @api private
+  def responses: () -> untyped
+
+  # Return the response. When there are
+  # multiple responses, they are returned one
+  # by one.
+  #
+  # @example Return response.
+  #   expectation.response
+  #
+  # @return [ Response ] The response.
+  #
+  # @api private
+  def response: (untyped request) -> untyped
+
+  # Check whether the options matches the request options.
+  # I checks options and original options.
+  def options_match?: (untyped request) -> untyped
+
+  # Check whether the base_url matches the request url.
+  # The base_url can be a string, regex or nil. String and
+  # regexp are checked, nil is always true, else false.
+  #
+  # Nil serves as a placeholder in case you want to match
+  # all urls.
+  def url_match?: (untyped request_url) -> untyped
+end
+
+# This module handles the request adding on
+# hydra.
+#
+# @api private
+module Typhoeus::Hydra::Addable
+  # Adds request to multi.
+  #
+  # @example Add request.
+  #   hydra.add(request)
+  #
+  # @param [ Typhoeus::Request ] request to add.
+  #
+  # @return [ void ]
+  def add: (untyped request) -> untyped
+end
+
+# This module provides a way to hook into before
+# a request gets queued in hydra. This is very powerful
+# and you should be careful because when you accidently
+# return a falsy value the request won't be executed.
+#
+# @api private
+module Typhoeus::Hydra::Before
+  # Overrride add in order to execute callbacks in
+  # Typhoeus.before. Will break and return when a
+  # callback returns nil, false or a response. Calls super
+  # otherwise.
+  #
+  # @example Add the request.
+  #   hydra.add(request)
+  def add: (untyped request) -> untyped
+end
+
+# This module handles the blocked connection request mode on
+# the hydra side, where only stubbed requests
+# are allowed.
+# Connection blocking needs to be turned on:
+#   Typhoeus.configure do |config|
+#     config.block_connection = true
+#   end
+#
+# When trying to do real requests a NoStub error
+# is raised.
+#
+# @api private
+module Typhoeus::Hydra::BlockConnection
+  # Overrides add in order to check before if block connection
+  # is turned on. If thats the case a NoStub error is
+  # raised.
+  #
+  # @example Add the request.
+  #   hydra.add(request)
+  #
+  # @param [ Request ] request The request to enqueue.
+  def add: (untyped request) -> untyped
+end
+
+module Typhoeus::Hydra::Cacheable
+  def add: (untyped request) -> untyped
+end
+
+# This module handles the GET request memoization
+# on the hydra side. Memoization needs to be turned
+# on:
+#   Typhoeus.configure do |config|
+#     config.memoize = true
+#   end
+#
+# @api private
+module Typhoeus::Hydra::Memoizable
+  # Return the memory.
+  #
+  # @example Return the memory.
+  #   hydra.memory
+  #
+  # @return [ Hash ] The memory.
+  def memory: () -> untyped
+
+  # Overrides add in order to check before if request
+  # is memoizable and already in memory. If thats the case,
+  # super is not called, instead the response is set and
+  # the on_complete callback called.
+  #
+  # @example Add the request.
+  #   hydra.add(request)
+  #
+  # @param [ Request ] request The request to add.
+  #
+  # @return [ Request ] The added request.
+  def add: (untyped request) -> untyped
+
+  # Overrides run to make sure the memory is cleared after
+  # each run.
+  #
+  # @example Run hydra.
+  #   hydra.run
+  def run: () -> untyped
+end
+
+# This module handles the request queueing on
+# hydra.
+#
+# @api private
+module Typhoeus::Hydra::Queueable
+  # Return the queued requests.
+  #
+  # @example Return queued requests.
+  #   hydra.queued_requests
+  #
+  # @return [ Array<Typhoeus::Request> ] The queued requests.
+  def queued_requests: () -> untyped
+
+  # Abort the current hydra run as good as
+  # possible. This means that it only
+  # clears the queued requests and can't do
+  # anything about already running requests.
+  #
+  # @example Abort hydra.
+  #   hydra.abort
+  def abort: () -> untyped
+
+  # Enqueues a request in order to be performed
+  # by the hydra. This can even be done while
+  # the hydra is running. Also sets hydra on
+  # request.
+  #
+  # @example Queue request.
+  #   hydra.queue(request)
+  def queue: (untyped request) -> untyped
+
+  # Pushes a request to the front of the queue,
+  # to be performed by the hydra. Also sets hydra
+  # on request
+  #
+  # @example Queue reques.
+  #   hydra.queue_front(request)
+  def queue_front: (untyped request) -> untyped
+
+  # Removes a request from queued_requests and
+  # adds it to the hydra in order to be
+  # performed next.
+  #
+  # @example Dequeue request.
+  #   hydra.dequeue
+  #
+  # @since 0.6.4
+  def dequeue: () -> untyped
+
+  # Removes requests from queued_requests and
+  # adds them to the hydra until max_concurrency
+  # is reached.
+  #
+  # @example Dequeue requests.
+  #   hydra.dequeue_many
+  #
+  # @since 0.6.8
+  def dequeue_many: () -> untyped
+end
+
+# Hydra manages making parallel HTTP requests. This
+# is achieved by using libcurls multi interface:
+# http://curl.haxx.se/libcurl/c/libcurl-multi.html
+# The benefits are that you don't have to worry running
+# the requests by yourself.
+#
+# Hydra will also handle how many requests you can
+# make in parallel. Things will get flakey if you
+# try to make too many requests at the same time.
+# The built in limit is 200. When more requests than
+# that are queued up, hydra will save them for later
+# and start the requests as others are finished. You
+# can raise or lower the concurrency limit through
+# the Hydra constructor.
+#
+# Regarding the asynchronous behavior of the hydra,
+# it is important to know that this is completely hidden
+# from the developer and you are free to apply
+# whatever technique you want to your code. That should not
+# conflict with libcurls internal concurrency mechanism.
+#
+# @example Use the hydra to do multiple requests.
+#   hydra = Typhoeus::Hydra.new
+#   requests = (0..9).map{ Typhoeus::Request.new("www.example.com") }
+#   requests.each{ |request| hydra.queue(request) }
+#   hydra.run
+#
+# @note Callbacks are going to delay the request
+#   execution.
+class Typhoeus::Hydra
+  include Hydra::Addable
+
+  include Hydra::Runnable
+
+  include Hydra::Memoizable
+
+  include Hydra::Cacheable
+
+  include Hydra::BlockConnection
+
+  include Hydra::Stubbable
+
+  include Hydra::Before
+
+  include Hydra::Queueable
+
+  # @example Set max_concurrency.
+  #   Typhoeus::Hydra.new(max_concurrency: 20)
+  attr_accessor max_concurrency: untyped
+
+  # @api private
+  attr_reader multi: untyped
+
+  # Returns a memoized hydra instance.
+  #
+  # @example Get a hydra.
+  #   Typhoeus::Hydra.hydra
+  #
+  # @return [Typhoeus::Hydra] A new hydra.
+  def self.hydra: () -> untyped
+
+  # Create a new hydra. All
+  # {http://rubydoc.info/github/typhoeus/ethon/Ethon/Multi#initialize-instance_method Ethon::Multi#initialize}
+  # options are also available.
+  #
+  # @example Create a hydra.
+  #   Typhoeus::Hydra.new
+  #
+  # @example Create a hydra with max_concurrency.
+  #   Typhoeus::Hydra.new(max_concurrency: 20)
+  #
+  # @param [ Hash ] options The options hash.
+  #
+  # @option options :max_concurrency [ Integer ] Number
+  #  of max concurrent connections to create. Default is
+  #  200.
+  #
+  # @see http://rubydoc.info/github/typhoeus/ethon/Ethon/Multi#initialize-instance_method
+  #   Ethon::Multi#initialize
+  def initialize: (?::Hash[untyped, untyped] options) -> untyped
+end
+
+# This module contains logic to run a hydra.
+module Typhoeus::Hydra::Runnable
+  # Start the hydra run.
+  #
+  # @example Start hydra run.
+  #   hydra.run
+  #
+  # @return [ Symbol ] Return value from multi.perform.
+  def run: () -> untyped
+end
+
+# This module handles stubbing on the hydra side.
+# It plays well with the block_connection configuration,
+# which raises when you make a request which is not stubbed.
+#
+# @api private
+module Typhoeus::Hydra::Stubbable
+  # Override add in order to check for matching expecations.
+  # When an expecation is found, super is not called. Instead a
+  # canned response is assigned to the request.
+  #
+  # @example Add the request.
+  #   hydra.add(request)
+  def add: (untyped request) -> untyped
+end
+
+# The easy pool stores already initialized
+# easy handles for future use. This is useful
+# because creating them is expensive.
+#
+# @api private
+module Typhoeus::Pool
+  # Releases easy into the pool. The easy handle is
+  # reset before it gets back in.
+  #
+  # @example Release easy.
+  #   Typhoeus::Pool.release(easy)
+  def self.release: (untyped easy) -> untyped
+
+  # Return an easy from the pool.
+  #
+  # @example Return easy.
+  #   Typhoeus::Pool.get
+  #
+  # @return [ Ethon::Easy ] The easy.
+  def self.get: () -> untyped
+
+  # Clear the pool
+  def self.clear: () -> untyped
+
+  # Use yielded easy, will be released automatically afterwards.
+  #
+  # @example Use easy.
+  #   Typhoeus::Pool.with_easy do |easy|
+  #     # use easy
+  #   end
+  def self.with_easy: () { (untyped) -> untyped } -> untyped
+
+  def self.easies: () -> untyped
+end
+
+# Typhoeus is a HTTP client library based on Ethon which
+# wraps libcurl. Sitting on top of libcurl makes Typhoeus
+# very reliable and fast.
+#
+# There are some gems using Typhoeus like
+# {https://github.com/myronmarston/vcr VCR},
+# {https://github.com/bblimke/webmock WebMock} or
+# {https://github.com/technoweenie/faraday Faraday}. VCR
+# and WebMock provide their own adapter whereas
+# Faraday relies on {Faraday::Adapter::Typhoeus}
+# since Typhoeus version 0.5.
+#
+# @example (see Typhoeus::Request)
+# @example (see Typhoeus::Hydra)
+#
+# @see Typhoeus::Request
+# @see Typhoeus::Hydra
+# @see Faraday::Adapter::Typhoeus
+#
+# @since 0.5.0
+module Typhoeus
+  extend Request::Actions
+
+  extend Request::Callbacks::Types
+
+  # Set the Typhoeus configuration options by passing a block.
+  #
+  # @example (see Typhoeus::Config)
+  #
+  # @yield [ Typhoeus::Config ]
+  #
+  # @return [ Typhoeus::Config ] The configuration.
+  #
+  # @see Typhoeus::Config
+  def self.configure: () { (untyped) -> untyped } -> untyped
+
+  # Stub out a specific request.
+  #
+  # @example (see Typhoeus::Expectation)
+  #
+  # @param [ String ] base_url The url to stub out.
+  # @param [ Hash ] options The options to stub out.
+  #
+  # @return [ Typhoeus::Expectation ] The expecatation.
+  #
+  # @see Typhoeus::Expectation
+  def self.stub: (untyped base_url, ?::Hash[untyped, untyped] options) { () -> untyped } -> untyped
+
+  # Add before callbacks.
+  #
+  # @example Add before callback.
+  #   Typhoeus.before { |request| p request.base_url }
+  #
+  # @param [ Block ] block The callback.
+  #
+  # @yield [ Typhoeus::Request ]
+  #
+  # @return [ Array<Block> ] All before blocks.
+  def self.before: () { () -> untyped } -> untyped
+
+  # Execute given block as if block connection is turned off.
+  # The old block connection state is restored afterwards.
+  #
+  # @example Make a real request, no matter if it's blocked.
+  #   Typhoeus::Config.block_connection = true
+  #   Typhoeus.get("www.example.com").code
+  #   #=> raise Typhoeus::Errors::NoStub
+  #
+  #   Typhoeus.with_connection do
+  #     Typhoeus.get("www.example.com").code
+  #     #=> :ok
+  #   end
+  #
+  # @param [ Block ] block The block to execute.
+  #
+  # @return [ Object ] Returns the return value of the block.
+  #
+  # @see Typhoeus::Config#block_connection
+  def self.with_connection: () { () -> untyped } -> untyped
+end
+
+# The default Typhoeus user agent.
+Typhoeus::USER_AGENT: ::String
+
+# Module containing logic about shortcuts to
+# http methods. Like
+#   Typhoeus.get("www.example.com")
+module Typhoeus::Request::Actions
+  # Make a get request.
+  #
+  # @example Make get request.
+  #   Typhoeus.get("www.example.com")
+  #
+  # @param (see Typhoeus::Request#initialize)
+  #
+  # @option (see Typhoeus::Request#initialize)
+  #
+  # @return (see Typhoeus::Response#initialize)
+  #
+  # @note (see Typhoeus::Request#initialize)
+  def get: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Make a post request.
+  #
+  # @example Make post request.
+  #   Typhoeus.post("www.example.com")
+  #
+  # @param (see Typhoeus::Request#initialize)
+  #
+  # @option (see Typhoeus::Request#initialize)
+  #
+  # @return (see Typhoeus::Response#initialize)
+  #
+  # @note (see Typhoeus::Request#initialize)
+  def post: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Make a put request.
+  #
+  # @example Make put request.
+  #   Typhoeus.put("www.example.com")
+  #
+  # @param (see Typhoeus::Request#initialize)
+  #
+  # @option options :params [ Hash ] Params hash which
+  #   is attached to the base_url.
+  # @option options :body [ Hash ] Body hash which
+  #   becomes a PUT request body.
+  #
+  # @return (see Typhoeus::Response#initialize)
+  #
+  # @note (see Typhoeus::Request#initialize)
+  def put: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Make a delete request.
+  #
+  # @example Make delete request.
+  #   Typhoeus.delete("www.example.com")
+  #
+  # @param (see Typhoeus::Request#initialize)
+  #
+  # @option (see Typhoeus::Request#initialize)
+  #
+  # @return (see Typhoeus::Response#initialize)
+  #
+  # @note (see Typhoeus::Request#initialize)
+  def delete: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Make a head request.
+  #
+  # @example Make head request.
+  #   Typhoeus.head("www.example.com")
+  #
+  # @param (see Typhoeus::Request#initialize)
+  #
+  # @option (see Typhoeus::Request#initialize)
+  #
+  # @return (see Typhoeus::Response#initialize)
+  #
+  # @note (see Typhoeus::Request#initialize)
+  def head: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Make a patch request.
+  #
+  # @example Make patch request.
+  #   Typhoeus.patch("www.example.com")
+  #
+  # @param (see Typhoeus::Request#initialize)
+  #
+  # @option (see Typhoeus::Request#initialize)
+  #
+  # @return (see Typhoeus::Response#initialize)
+  #
+  # @note (see Typhoeus::Request#initialize)
+  def patch: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Make a options request.
+  #
+  # @example Make options request.
+  #   Typhoeus.options("www.example.com")
+  #
+  # @param (see Typhoeus::Request#initialize)
+  #
+  # @option (see Typhoeus::Request#initialize)
+  #
+  # @return (see Typhoeus::Response#initialize)
+  #
+  # @note (see Typhoeus::Request#initialize)
+  def options: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+end
+
+# This module provides a way to hook into before
+# a request runs. This is very powerful
+# and you should be careful because when you accidently
+# return a falsy value the request won't be executed.
+#
+# @api private
+module Typhoeus::Request::Before
+  # Overrride run in order to execute callbacks in
+  # Typhoeus.before. Will break and return when a
+  # callback returns nil or false. Calls super
+  # otherwise.
+  #
+  # @example Run the request.
+  #   request.run
+  def run: () -> untyped
+end
+
+# This module handles the blocked connection request mode on
+# the request side, where only stubbed requests
+# are allowed.
+# Connection blocking needs to be turned on:
+#   Typhoeus.configure do |config|
+#     config.block_connection = true
+#   end
+#
+# When trying to do real requests a NoStub error
+# is raised.
+#
+# @api private
+module Typhoeus::Request::BlockConnection
+  # Overrides run in order to check before if block connection
+  # is turned on. If thats the case a NoStub error is
+  # raised.
+  #
+  # @example Run request.
+  #   request.run
+  #
+  # @raise [Typhoeus::Errors::NoStub] If connection is blocked
+  #   and no stub defined.
+  def run: () -> untyped
+
+  # Returns wether a request is blocked or not. Takes
+  # request.block_connection and Typhoeus::Config.block_connection
+  # into consideration.
+  #
+  # @example Blocked?
+  #   request.blocked?
+  #
+  # @return [ Boolean ] True if blocked, false else.
+  def blocked?: () -> untyped
+end
+
+module Typhoeus::Request::Cacheable
+  def response=: (untyped response) -> untyped
+
+  def cacheable?: () -> untyped
+
+  def run: () -> untyped
+
+  def cache_ttl: () -> untyped
+
+  def cache: () -> untyped
+end
+
+# This module contains the logic for the response callbacks.
+#
+# You can set multiple callbacks, which are then executed
+# in the same order.
+#
+#   request.on_complete { |response| p 1 }
+#   request.on_complete { |response| p 2 }
+#   request.execute_callbacks
+#   #=> 1
+#   #=> 2
+#
+# You can clear the callbacks:
+#
+#   request.on_complete { |response| p 1 }
+#   request.on_complete { |response| p 2 }
+#   request.on_complete.clear
+#   request.execute_callbacks
+#   #=> nil
+#
+# @note If you're using the Hydra to execute multiple
+#   requests, then callbacks are delaying the
+#   request execution.
+module Typhoeus::Request::Callbacks
+  # Execute the headers callbacks and yields response.
+  #
+  # @example Execute callbacks.
+  #   request.execute_headers_callbacks
+  #
+  # @return [ Array<Object> ] The results of the on_headers callbacks.
+  #
+  # @api private
+  def execute_headers_callbacks: (untyped response) -> untyped
+
+  # Execute necessary callback and yields response. This
+  # include in every case on_complete and on_progress, on_success
+  # if successful and on_failure if not.
+  #
+  # @example Execute callbacks.
+  #   request.execute_callbacks
+  #
+  # @return [ void ]
+  #
+  # @api private
+  def execute_callbacks: () -> untyped
+end
+
+module Typhoeus::Request::Callbacks::Types
+  # :nodoc:
+  # Set on_complete callback.
+  #
+  # @example Set on_complete.
+  #   request.on_complete { |response| p "yay" }
+  #
+  # @param [ Block ] block The block to execute.
+  #
+  # @yield [ Typhoeus::Response ]
+  #
+  # @return [ Array<Block> ] All on_complete blocks.
+  def on_complete: () { () -> untyped } -> untyped
+
+  # Set on_success callback.
+  #
+  # @example Set on_success.
+  #   request.on_success { |response| p "yay" }
+  #
+  # @param [ Block ] block The block to execute.
+  #
+  # @yield [ Typhoeus::Response ]
+  #
+  # @return [ Array<Block> ] All on_success blocks.
+  def on_success: () { () -> untyped } -> untyped
+
+  # Set on_failure callback.
+  #
+  # @example Set on_failure.
+  #   request.on_failure { |response| p "yay" }
+  #
+  # @param [ Block ] block The block to execute.
+  #
+  # @yield [ Typhoeus::Response ]
+  #
+  # @return [ Array<Block> ] All on_failure blocks.
+  def on_failure: () { () -> untyped } -> untyped
+
+  # Set on_headers callback.
+  #
+  # @example Set on_headers.
+  #   request.on_headers { |response| p "yay" }
+  #
+  # @param [ Block ] block The block to execute.
+  #
+  # @yield [ Typhoeus::Response ]
+  #
+  # @return [ Array<Block> ] All on_headers blocks.
+  def on_headers: () { () -> untyped } -> untyped
+
+  # Set on_progress callback.
+  #
+  # @example Set on_progress.
+  #   request.on_progress do |dltotal, dlnow, ultotal, ulnow|
+  #     puts "dltotal (#{dltotal}), dlnow (#{dlnow}), ultotal (#{ultotal}), ulnow (#{ulnow})"
+  #   end
+  #
+  # @param [ Block ] block The block to execute.
+  #
+  # @yield [ Typhoeus::Response ]
+  #
+  # @return [ Array<Block> ] All on_progress blocks.
+  def on_progress: () { () -> untyped } -> untyped
+end
+
+# This module contains custom serializer.
+module Typhoeus::Request::Marshal
+  # Return the important data needed to serialize this Request, except the
+  # request callbacks and `hydra`, since they cannot be marshalled.
+  def marshal_dump: () -> untyped
+
+  # Load.
+  def marshal_load: (untyped attributes) -> untyped
+end
+
+# This module handles the GET request memoization
+# on the request side. Memoization needs to be turned
+# on:
+#   Typhoeus.configure do |config|
+#     config.memoize = true
+#   end
+#
+# @api private
+module Typhoeus::Request::Memoizable
+  # Override response setter and memoizes response
+  # if the request is memoizable.
+  #
+  # @param [ Response ] response The response to set.
+  #
+  # @example Set response.
+  #   request.response = response
+  def response=: (untyped response) -> untyped
+
+  # Return whether a request is memoizable.
+  #
+  # @example Is request memoizable?
+  #   request.memoizable?
+  #
+  # @return [ Boolean ] Return true if memoizable, false else.
+  def memoizable?: () -> untyped
+end
+
+# This module contains everything what is necessary
+# to make a single request.
+module Typhoeus::Request::Operations
+  # Run a request.
+  #
+  # @example Run a request.
+  #  Typhoeus::Request.new("www.example.com").run
+  #
+  # @return [ Response ] The response.
+  def run: () -> untyped
+
+  # Sets a response, the request on the response
+  # and executes the callbacks.
+  #
+  # @param [Typhoeus::Response] response The response.
+  # @param [Boolean] bypass_memoization Wether to bypass
+  #   memoization or not. Decides how the response is set.
+  #
+  # @return [Typhoeus::Response] The response.
+  def finish: (untyped response, ?untyped? bypass_memoization) -> untyped
+end
+
+# This class represents a request.
+#
+# @example (see #initialize)
+#
+# @example Make a request with the shortcut.
+#   response = Typhoeus.get("www.example.com")
+#
+# @see (see #initialize)
+class Typhoeus::Request
+  extend Request::Actions
+
+  include Request::Callbacks::Types
+
+  include Request::Callbacks
+
+  include Request::Streamable
+
+  include Request::Marshal
+
+  include Request::Operations
+
+  include Request::Responseable
+
+  include Request::Memoizable
+
+  include Request::Cacheable
+
+  include Request::BlockConnection
+
+  include Request::Stubbable
+
+  include Request::Before
+
+  # Returns the provided base url.
+  #
+  # @return [ String ]
+  attr_accessor base_url: untyped
+
+  # Returns options, which includes default parameters.
+  #
+  # @return [ Hash ]
+  attr_accessor options: untyped
+
+  # Returns the hydra in which the request ran, if any.
+  #
+  # @return [ Typhoeus::Hydra ]
+  #
+  # @api private
+  attr_accessor hydra: untyped
+
+  # Returns the original options provided.
+  #
+  # @return [ Hash ]
+  #
+  # @api private
+  attr_accessor original_options: untyped
+
+  # @return [ Boolean ]
+  #
+  # @api private
+  attr_accessor block_connection: untyped
+
+  # Creates a new request.
+  #
+  # @example Simplest request.
+  #   response = Typhoeus::Request.new("www.example.com").run
+  #
+  # @example Request with url parameters.
+  #   response = Typhoeus::Request.new(
+  #     "www.example.com",
+  #     params: {a: 1}
+  #   ).run
+  #
+  # @example Request with a body.
+  #   response = Typhoeus::Request.new(
+  #     "www.example.com",
+  #     body: {b: 2}
+  #   ).run
+  #
+  # @example Request with parameters and body.
+  #   response = Typhoeus::Request.new(
+  #     "www.example.com",
+  #     params: {a: 1},
+  #     body: {b: 2}
+  #   ).run
+  #
+  # @example Create a request and allow follow redirections.
+  #   response = Typhoeus::Request.new(
+  #     "www.example.com",
+  #     followlocation: true
+  #   ).run
+  #
+  # @param [ String ] base_url The url to request.
+  # @param [ options ] options The options.
+  #
+  # @option options [ Hash ] :params Translated
+  #   into url parameters.
+  # @option options [ Hash ] :body Translated
+  #   into HTTP POST request body.
+  #
+  # @return [ Typhoeus::Request ] The request.
+  #
+  # @note See {http://rubydoc.info/github/typhoeus/ethon/Ethon/Easy/Options Ethon::Easy::Options} for more options.
+  #
+  # @see Typhoeus::Hydra
+  # @see Typhoeus::Response
+  # @see Typhoeus::Request::Actions
+  def initialize: (untyped base_url, ?::Hash[untyped, untyped] options) -> untyped
+
+  # Return the url.
+  # In contrast to base_url which returns the value you specified, url returns
+  # the full url including the parameters.
+  #
+  # @example Get the url.
+  #   request.url
+  #
+  # @since 0.5.5
+  def url: () -> untyped
+
+  # Returns whether other is equal to self.
+  #
+  # @example Are request equal?
+  #   request.eql?(other_request)
+  #
+  # @param [ Object ] other The object to check.
+  #
+  # @return [ Boolean ] Returns true if equal, else false.
+  #
+  # @api private
+  def eql?: (untyped other) -> untyped
+
+  # Overrides Object#hash.
+  #
+  # @return [ Integer ] The integer representing the request.
+  #
+  # @api private
+  def hash: () -> untyped
+
+  # Returns a cache key for use with caching methods that required a string
+  # for a key. Will get used by ActiveSupport::Cache stores automatically.
+  #
+  # @return [ String ] The cache key.
+  def cache_key: () -> untyped
+
+  # Mimics libcurls POST body generation. This is not accurate, but good
+  # enough for VCR.
+  #
+  # @return [ String ] The encoded body.
+  #   otherwise.
+  #
+  # @api private
+  def encoded_body: () -> untyped
+
+  # Checks if two hashes are equal or not, discarding
+  # first-level hash order.
+  #
+  # @param [ Hash ] left
+  # @param [ Hash ] right hash to check for equality
+  #
+  # @return [ Boolean ] Returns true if hashes have
+  #   same values for same keys and same length,
+  #   even if the keys are given in a different order.
+  def fuzzy_hash_eql?: (untyped left, untyped right) -> untyped
+
+  def hashable_string_for: (untyped obj) -> untyped
+
+  # Sets default header and verbose when turned on.
+  def set_defaults: () -> untyped
+end
+
+# This module contains logic for having a reponse
+# getter and setter.
+module Typhoeus::Request::Responseable
+  # Set the response.
+  #
+  # @example Set response.
+  #  request.response = response
+  #
+  # @param [ Response ] value The response to set.
+  def response=: (untyped value) -> untyped
+
+  # Return the response.
+  #
+  # @example Return response.
+  #   request.response
+  #
+  # @return [ Response ] The response.
+  def response: () -> untyped
+end
+
+# This module contians the logic for response streaming.
+module Typhoeus::Request::Streamable
+  # Set on_body callback.
+  #
+  # This callback will be called each time a portion of the body is read from the socket.
+  # Setting an on_body callback will cause the response body to be empty.
+  #
+  # @example Set on_body.
+  #   request.on_body { |body_chunk, response| puts "Got #{body_chunk.bytesize} bytes" }
+  #
+  # @param [ Block ] block The block to execute.
+  #
+  # @yield [ Typhoeus::Response, String ]
+  #
+  # @return [ Array<Block> ] All on_body blocks.
+  def on_body: () { () -> untyped } -> untyped
+
+  # Is this request using streaming?
+  #
+  # @return [ Boolean ] True if any on_body blocks have been set.
+  def streaming?: () -> untyped
+end
+
+# This module handles stubbing on the request side.
+# It plays well with the block_connection configuration,
+# which raises when you make a request which is not stubbed.
+#
+# @api private
+module Typhoeus::Request::Stubbable
+  # Override run in order to check for matching expectations.
+  # When an expectation is found, super is not called. Instead a
+  # canned response is assigned to the request.
+  #
+  # @example Run the request.
+  #   request.run
+  #
+  # @return [ Response ] The response.
+  def run: () -> untyped
+end
+
+module Typhoeus::Response::Cacheable
+  # Set the cache status, if we got response from cache
+  # it will have cached? == true
+  attr_writer cached: untyped
+
+  def cached?: () -> untyped
+end
+
+# This class represents the response header.
+# It can be accessed like a hash.
+# Values can be strings (normal case) or arrays of strings (for duplicates headers)
+#
+# @api private
+class Typhoeus::Response::Header
+  # Create a new header.
+  #
+  # @example Create new header.
+  #   Header.new(raw)
+  #
+  # @param [ String ] raw The raw header.
+  def initialize: (untyped raw) -> untyped
+
+  def []: (untyped key) -> untyped
+
+  # Parses the raw header.
+  #
+  # @example Parse header.
+  #   header.parse
+  def parse: () -> untyped
+
+  # Processes line and saves the result.
+  #
+  # @return [ void ]
+  def process_line: (untyped header) -> untyped
+
+  # Sets key value pair for self and @sanitized.
+  #
+  # @return [ void ]
+  def process_pair: (untyped key, untyped value) -> untyped
+
+  # Sets value for key in specified hash
+  #
+  # @return [ void ]
+  def set_value: (untyped key, untyped value, untyped hash) -> untyped
+
+  # Returns the raw header or empty string.
+  #
+  # @example Return raw header.
+  #   header.raw
+  #
+  # @return [ String ] The raw header.
+  def raw: () -> untyped
+
+  # Sets the default proc for the specified hash independent of the Ruby version.
+  #
+  # @return [ void ]
+  def set_default_proc_on: (untyped hash, untyped default_proc) -> untyped
+end
+
+# This module contains logic about informations
+# on a response.
+module Typhoeus::Response::Informations
+  # Return libcurls return value.
+  #
+  # @example Get return_code.
+  #   response.return_code
+  #
+  # @return [ Symbol ] The return_code.
+  def return_code: () -> untyped
+
+  # Returns a string describing the return.
+  #
+  # @example Get return_message.
+  #   response.return_message
+  #
+  # @return [ String ] The return_message.
+  #
+  # @since 0.6.2
+  def return_message: () -> untyped
+
+  # Return the http response body.
+  #
+  # @example Get response_body.
+  #   response.response_body
+  #
+  # @return [ String ] The response_body.
+  def response_body: () -> untyped
+
+  # Return the http response headers.
+  #
+  # @example Get response_headers.
+  #   response.response_headers
+  #
+  # @return [ String ] The response_headers.
+  def response_headers: () -> untyped
+
+  # Return the last received HTTP, FTP or SMTP response code.
+  # The value will be zero if no server response code has
+  # been received. Note that a proxy's CONNECT response should
+  # be read with http_connect_code and not this.
+  #
+  # @example Get response_code.
+  #   response.response_code
+  #
+  # @return [ Integer ] The response_code.
+  def response_code: () -> untyped
+
+  # Return the available http auth methods.
+  # Bitmask indicating the authentication method(s)
+  # available.
+  #
+  # @example Get httpauth_avail.
+  #   response.httpauth_avail
+  #
+  # @return [ Integer ] The bitmask.
+  def httpauth_avail: () -> untyped
+
+  # Return the total time in seconds for the previous
+  # transfer, including name resolving, TCP connect etc.
+  #
+  # @example Get total_time.
+  #   response.total_time
+  #
+  # @return [ Float ] The total_time.
+  def total_time: () -> untyped
+
+  # Return the time, in seconds, it took from the start
+  # until the first byte is received by libcurl. This
+  # includes pretransfer time and also the time the
+  # server needs to calculate the result.
+  #
+  # @example Get starttransfer_time.
+  #   response.starttransfer_time
+  #
+  # @return [ Float ] The starttransfer_time.
+  def starttransfer_time: () -> untyped
+
+  # Return the time, in seconds, it took from the start
+  # until the SSL/SSH connect/handshake to the remote
+  # host was completed. This time is most often very near
+  # to the pre transfer time, except for cases such as HTTP
+  # pipelining where the pretransfer time can be delayed
+  # due to waits in line for the pipeline and more.
+  #
+  # @example Get appconnect_time.
+  #   response.appconnect_time
+  #
+  # @return [ Float ] The appconnect_time.
+  def appconnect_time: () -> untyped
+
+  # Return the time, in seconds, it took from the start
+  # until the file transfer is just about to begin. This
+  # includes all pre-transfer commands and negotiations
+  # that are specific to the particular protocol(s) involved.
+  # It does not involve the sending of the protocol-
+  # specific request that triggers a transfer.
+  #
+  # @example Get pretransfer_time.
+  #  response.pretransfer_time
+  #
+  # @return [ Float ] The pretransfer_time.
+  def pretransfer_time: () -> untyped
+
+  # Return the time, in seconds, it took from the start
+  # until the connect to the remote host (or proxy) was completed.
+  #
+  # @example Get connect_time.
+  #   response.connect_time
+  #
+  # @return [ Float ] The connect_time.
+  def connect_time: () -> untyped
+
+  # Return the time, in seconds, it took from the
+  # start until the name resolving was completed.
+  #
+  # @example Get namelookup_time.
+  #   response.namelookup_time
+  #
+  # @return [ Float ] The namelookup_time.
+  def namelookup_time: () -> untyped
+
+  # Return the time, in seconds, it took for all redirection steps
+  # include name lookup, connect, pretransfer and transfer before the
+  # final transaction was started. time_redirect shows the complete
+  # execution time for multiple redirections.
+  #
+  # @example Get redirect_time.
+  #   response.redirect_time
+  #
+  # @return [ Float ] The redirect_time.
+  def redirect_time: () -> untyped
+
+  # Return the last used effective url.
+  #
+  # @example Get effective_url.
+  #   response.effective_url
+  #
+  # @return [ String ] The effective_url.
+  def effective_url: () -> untyped
+
+  # Return the string holding the IP address of the most recent
+  # connection done with this curl handle. This string
+  # may be IPv6 if that's enabled.
+  #
+  # @example Get primary_ip.
+  #   response.primary_ip
+  #
+  # @return [ String ] The primary_ip.
+  def primary_ip: () -> untyped
+
+  # Return the total number of redirections that were
+  # actually followed
+  #
+  # @example Get redirect_count.
+  #   response.redirect_count
+  #
+  # @return [ Integer ] The redirect_count.
+  def redirect_count: () -> untyped
+
+  def request_size: () -> untyped
+
+  def debug_info: () -> untyped
+
+  # Returns the response header.
+  #
+  # @example Return headers.
+  #   response.headers
+  #
+  # @return [ Typhoeus::Header ] The response header.
+  def headers: () -> untyped
+
+  # Return all redirections in between as multiple
+  # responses with header.
+  #
+  # @example Return redirections.
+  #   response.redirections
+  #
+  # @return [ Array<Typhoeus::Response> ] The redirections
+  def redirections: () -> untyped
+end
+
+# This class represents the response.
+class Typhoeus::Response
+  include Response::Informations
+
+  include Response::Status
+
+  include Response::Cacheable
+
+  # Remembers the corresponding request.
+  #
+  # @example Get request.
+  #   request = Typhoeus::Request.new("www.example.com")
+  #   response = request.run
+  #   request == response.request
+  #   #=> true
+  #
+  # @return [ Typhoeus::Request ]
+  attr_accessor request: untyped
+
+  # The provided options, which contain all the
+  # informations about the request.
+  #
+  # @return [ Hash ]
+  attr_accessor options: untyped
+
+  # Set the handled response.
+  attr_writer handled_response: untyped
+
+  # @api private
+  attr_writer mock: untyped
+
+  # Create a new response.
+  #
+  # @example Create a response.
+  #  Response.new
+  #
+  # @param [ Hash ] options The options hash.
+  #
+  # @return [ Response ] The new response.
+  def initialize: (?::Hash[untyped, untyped] options) -> untyped
+
+  # Returns whether this request is mocked
+  # or not.
+  #
+  # @api private
+  def mock: () -> untyped
+
+  # Returns the handled_response if it has
+  # been defined; otherwise, returns the response
+  #
+  # @return [ Object ] The result of callbacks
+  #   done on the response or the original response.
+  def handled_response: () -> untyped
+end
+
+# This module contains logic about the http
+# status.
+module Typhoeus::Response::Status
+  # Return the status message if present.
+  #
+  # @example Return status message.
+  #   reesponse.status_message
+  #
+  # @return [ String ] The message.
+  def status_message: () -> untyped
+
+  # Return the http version.
+  #
+  # @example Return http version.
+  #  response.http_version
+  #
+  # @return [ String ] The http version.
+  def http_version: () -> untyped
+
+  # Return whether the response is a success.
+  #
+  # @example Return if the response was successful.
+  #  response.success?
+  #
+  # @return [ Boolean ] Return true if successful, false else.
+  def success?: () -> untyped
+
+  # Return whether the response is a failure.
+  #
+  # @example Return if the response was failed.
+  #  response.failure?
+  #
+  # @return [ Boolean ] Return true if failure, false else.
+  def failure?: () -> untyped
+
+  # Return wether the response is modified.
+  #
+  # @example Return if the response was modified.
+  #  response.modified?
+  #
+  # @return [ Boolean ] Return true if modified, false else.
+  def modified?: () -> untyped
+
+  # Return whether the response is timed out.
+  #
+  # @example Return if the response timed out.
+  #  response.timed_out?
+  #
+  # @return [ Boolean ] Return true if timed out, false else.
+  def timed_out?: () -> untyped
+
+  # :nodoc:
+  def first_header_line: () -> untyped
+
+  # :nodoc:
+  def has_good_response_code?: () -> untyped
+
+  # :nodoc:
+  def has_bad_response_code?: () -> untyped
+end
+
+# The current Typhoeus version.
+Typhoeus::VERSION: ::String
