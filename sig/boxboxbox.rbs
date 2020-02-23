@@ -24,6 +24,11 @@ class Boxboxbox::Box
 end
 
 class Boxboxbox::Unzipper
+  @target_extensions: Array[String]
+  @target_extensions_regexp: Regexp
+
+  def initialize: (target_extensions: Array[String]) -> untyped
+  def target_extensions_regexp: -> Regexp
   def unzip: (zip_path: Pathname) -> _Each[Boxboxbox::Image, nil]
 end
 

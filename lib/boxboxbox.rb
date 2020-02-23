@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'boxboxbox/unzipper'
+
 module Boxboxbox
   class Image
     # @dynamic name, binary
@@ -29,4 +33,4 @@ module Boxboxbox
       @bottom_right = bottom_right
     end
   end
-end 
+end
