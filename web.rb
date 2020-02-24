@@ -63,8 +63,6 @@ post '/convert' do
     boxes.concat(batch_boxes)
   end
 
-  p boxes
-
   csv_string = Boxboxbox::BoxPresenter::Csv.new.present(boxes: boxes)
   Tempfile.open do |fp|
     fp.write csv_string
