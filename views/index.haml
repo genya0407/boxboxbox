@@ -1,0 +1,14 @@
+!!!
+%body
+  %form{action: '/convert', method: :post, enctype: "multipart/form-data"}
+    %p
+      %label
+        アクセストークン
+      %input{type: 'text', name: 'access_token'}
+    %p
+      %label
+        画像入りzipファイル
+      %input{type: 'file', name: 'image_zip', accept: 'application/zip'}
+    %p
+      %button{type: 'submit'}
+        変換
