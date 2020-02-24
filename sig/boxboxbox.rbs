@@ -53,7 +53,7 @@ class Boxboxbox::BoxLocalizer::GoogleVisionApiOnline
 
   def vertices2box: (image_name: String, vertices: ::Array[{x: Float, y: Float}]) -> Boxboxbox::Box
 
-  def response2vertices: (response_body: String) -> ::Array[{x: Float, y: Float}]
+  def response2person_vertices: (response_body: String) -> ::Array[::Array[{x: Float, y: Float}]]
 
   def generate_request: (image_content: String) -> Typhoeus::Request
 end

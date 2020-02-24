@@ -74,12 +74,12 @@ module Boxboxbox
       end
 
       def vertices2box(image_name:, vertices:)
-        xs = vertices.map { |vertice| vertice[:x]&.to_f || 0 }
-        ys = vertices.map { |vertice| vertice[:y]&.to_f || 0 }
+        xs = vertices.map { |vertice| vertice[:x]&.to_f || 0.0 }
+        ys = vertices.map { |vertice| vertice[:y]&.to_f || 0.0 }
         Boxboxbox::Box.new(
           image_name: image_name,
-          top_left: Boxboxbox::Point.new(x: xs.min || 0, y: ys.min || 0),
-          bottom_right: Boxboxbox::Point.new(x: xs.max || 0, y: ys.max || 0)
+          top_left: Boxboxbox::Point.new(x: xs.min || 0.0, y: ys.min || 0.0),
+          bottom_right: Boxboxbox::Point.new(x: xs.max || 0.0, y: ys.max || 0.0)
         )
       end
 
