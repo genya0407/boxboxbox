@@ -1,0 +1,4 @@
+class CSV
+  def self.generate: { (CSV) -> void } -> String
+  def <<: (::Array[untyped]) -> void
+end

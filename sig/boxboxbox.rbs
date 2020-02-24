@@ -58,6 +58,10 @@ class Boxboxbox::BoxLocalizer::GoogleVisionApiOnline
   def generate_request: (image_content: String) -> Typhoeus::Request
 end
 
+class Boxboxbox::BoxPresenter::Csv
+  def present: (boxes: ::Array[::Boxboxbox::Box]) -> String
+end
+
 Boxboxbox::BoxLocalizer::GoogleVisionApiOnline::URL: ::String
 
 Boxboxbox::BoxLocalizer::GoogleVisionApiOnline::PERSON_LABEL: ::String

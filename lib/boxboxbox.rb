@@ -2,6 +2,7 @@
 
 require 'boxboxbox/unzipper'
 require 'boxboxbox/box_localizer.rb'
+require 'boxboxbox/box_presenter.rb'
 
 module Boxboxbox
   class BinaryImage

@@ -84,11 +84,10 @@ module Boxboxbox
       end
 
       def response2person_vertices(response_body:)
-        JSON.parse(response_body, symbolize_names: true)
-            .dig(:responses, 0, :localizedObjectAnnotations)
-            .select { |annot| annot[:name] == PERSON_LABEL }
-            .select { |annot| annot[:score] >= @min_percentage }
-            .map { |annot| annot.dig(:boundingPoly, :normalizedVertices) }
+        localized_object_annotations = JSON.parse(response_body, symbolize_names: true).dig(:responses, 0, :localizedObjectAnnotations) || []
+        localized_object_annotations.select { |annot| annot[:name] == PERSON_LABEL }
+                                    .select { |annot| annot[:score] >= @min_percentage }
+                                    .map { |annot| annot.dig(:boundingPoly, :normalizedVertices) }
       end
 
       def generate_request(image_content:)
