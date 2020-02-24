@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require 'boxboxbox/unzipper'
+require 'boxboxbox/box_localizer.rb'
 
 module Boxboxbox
-  class Image
+  class BinaryImage
     # @dynamic name, binary
     attr_reader :name, :binary
 

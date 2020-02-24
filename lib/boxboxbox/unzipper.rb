@@ -14,7 +14,7 @@ module Boxboxbox
           while entry = zis.get_next_entry
             next unless entry.name =~ target_extensions_regexp
 
-            yielder << Image.new(name: entry.name, binary: entry.get_input_stream.read)
+            yielder << BinaryImage.new(name: entry.name, binary: entry.get_input_stream.read)
           end
         end
         nil

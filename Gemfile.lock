@@ -29,6 +29,7 @@ GEM
     parallel (1.19.1)
     parser (2.7.0.2)
       ast (~> 2.4.0)
+    parslet (1.8.2)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -70,6 +71,8 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
     thor (1.0.1)
     thread_safe (0.3.6)
+    toml (0.2.0)
+      parslet (~> 1.8.0)
     typhoeus (1.3.1)
       ethon (>= 0.9.0)
     tzinfo (1.2.6)
@@ -81,11 +84,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  concurrent-ruby
   pry
   rspec
   rubocop
   rubyzip
   steep
+  toml
   typhoeus
 
 BUNDLED WITH

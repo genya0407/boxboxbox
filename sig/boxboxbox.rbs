@@ -1,7 +1,7 @@
 module Boxboxbox
 end
 
-class Boxboxbox::Image
+class Boxboxbox::BinaryImage
   attr_reader name: String
   attr_reader binary: String
 
@@ -9,10 +9,10 @@ class Boxboxbox::Image
 end
 
 class Boxboxbox::Point
-  attr_reader x: Float
-  attr_reader y: Float
+  attr_reader x: Integer
+  attr_reader y: Integer
 
-  def initialize: (x: Float x, y: Float y) -> untyped
+  def initialize: (x: Integer x, y: Integer y) -> untyped
 end
 
 class Boxboxbox::Box
@@ -24,12 +24,40 @@ class Boxboxbox::Box
 end
 
 class Boxboxbox::Unzipper
-  @target_extensions: Array[String]
+  @target_extensions: ::Array[String]
   @target_extensions_regexp: Regexp
 
-  def initialize: (target_extensions: Array[String]) -> untyped
+  def initialize: (target_extensions: ::Array[String]) -> untyped
   def target_extensions_regexp: -> Regexp
-  def unzip: (zip_path: Pathname) -> _Each[Boxboxbox::Image, nil]
+  def unzip: (zip_path: Pathname) -> _Each[Boxboxbox::BinaryImage, nil]
+end
+
+interface _BoxLocalizer
+  def localize: (images: ::Array[Boxboxbox::BinaryImage]) -> ::Array[Boxboxbox::Box]
 end
 
 Boxboxbox::Unzipper::TARGET_EXTENSION_REGEX: Regexp
+
+class Boxboxbox::BoxLocalizer::GoogleVisionApiOnline
+  @access_token: String
+  @max_results: Integer
+  @min_percentage: Float
+  @max_retry: Integer
+  @logger: Logger
+
+  def initialize: (access_token: String, max_results: Integer, min_percentage: Float, max_retry: Integer, ?logger: Logger) -> untyped
+
+  def localize: (images: ::Array[Boxboxbox::BinaryImage]) -> ::Array[Boxboxbox::Box]
+
+  def exec_request: (images: ::Array[Boxboxbox::BinaryImage]) -> { success_boxes: ::Array[Boxboxbox::Box], failed_images: ::Array[Boxboxbox::BinaryImage] }
+
+  def vertices2box: (image_name: String, vertices: ::Array[{x: Integer, y: Integer}]) -> Boxboxbox::Box
+
+  def response2vertices: (response_body: String) -> ::Array[{x: Integer, y: Integer}]
+
+  def generate_request: (image_content: String) -> Typhoeus::Request
+end
+
+Boxboxbox::BoxLocalizer::GoogleVisionApiOnline::URL: ::String
+
+Boxboxbox::BoxLocalizer::GoogleVisionApiOnline::PERSON_LABEL: ::String

@@ -1,0 +1,5 @@
+module Concurrent
+end
+
+class Concurrent::Array[T] < ::Array[T]
+end

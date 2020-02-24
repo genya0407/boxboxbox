@@ -1099,7 +1099,7 @@ module Typhoeus::Request::Callbacks::Types
   # @yield [ Typhoeus::Response ]
   #
   # @return [ Array<Block> ] All on_complete blocks.
-  def on_complete: () { () -> untyped } -> untyped
+  def on_complete: () { (Typhoeus::Response) -> void } -> void
 
   # Set on_success callback.
   #
