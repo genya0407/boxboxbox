@@ -4,6 +4,7 @@ require 'typhoeus'
 require 'concurrent'
 require 'base64'
 require 'logger'
+require 'json'
 
 module Boxboxbox
   module BoxLocalizer
@@ -20,6 +21,9 @@ module Boxboxbox
       end
 
       def localize(images:)
+        # require 'tapping_device'
+        # print_calls_in_detail(self, exclude_by_paths: [/gems/], awesome_print: true)
+
         # rubocop:disable Style/EmptyLiteral
         boxes = Array.new
         remaining_retry_count = @max_retry
@@ -52,8 +56,10 @@ module Boxboxbox
           request = generate_request(image_content: image.binary)
           request.on_complete do |response|
             if response.success?
-              vertices = response2vertices(response_body: response.response_body)
-              success_boxes << vertices2box(image_name: image.name, vertices: vertices)
+              person_vertices = response2person_vertices(response_body: response.response_body)
+              person_vertices.each do |vertices|
+                success_boxes << vertices2box(image_name: image.name, vertices: vertices)
+              end
             else
               @logger.warn("#{__FILE__}:#{__LINE__}") { response.response_body }
               failed_images << image
@@ -77,12 +83,12 @@ module Boxboxbox
         )
       end
 
-      def response2vertices(response_body:)
+      def response2person_vertices(response_body:)
         JSON.parse(response_body, symbolize_names: true)
-            .dig(:responses, :localizedObjectAnnotations)
+            .dig(:responses, 0, :localizedObjectAnnotations)
             .select { |annot| annot[:name] == PERSON_LABEL }
             .select { |annot| annot[:score] >= @min_percentage }
-            .map { |annot| annot[:boundingPoly][:vertices] }
+            .map { |annot| annot.dig(:boundingPoly, :normalizedVertices) }
       end
 
       def generate_request(image_content:)

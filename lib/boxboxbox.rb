@@ -12,6 +12,10 @@ module Boxboxbox
       @name = name
       @binary = binary
     end
+
+    def inspect
+      @name
+    end
   end
 
   class Point

@@ -9,10 +9,10 @@ class Boxboxbox::BinaryImage
 end
 
 class Boxboxbox::Point
-  attr_reader x: Integer
-  attr_reader y: Integer
+  attr_reader x: Float
+  attr_reader y: Float
 
-  def initialize: (x: Integer x, y: Integer y) -> untyped
+  def initialize: (x: Float x, y: Float y) -> untyped
 end
 
 class Boxboxbox::Box
@@ -51,9 +51,9 @@ class Boxboxbox::BoxLocalizer::GoogleVisionApiOnline
 
   def exec_request: (images: ::Array[Boxboxbox::BinaryImage]) -> { success_boxes: ::Array[Boxboxbox::Box], failed_images: ::Array[Boxboxbox::BinaryImage] }
 
-  def vertices2box: (image_name: String, vertices: ::Array[{x: Integer, y: Integer}]) -> Boxboxbox::Box
+  def vertices2box: (image_name: String, vertices: ::Array[{x: Float, y: Float}]) -> Boxboxbox::Box
 
-  def response2vertices: (response_body: String) -> ::Array[{x: Integer, y: Integer}]
+  def response2vertices: (response_body: String) -> ::Array[{x: Float, y: Float}]
 
   def generate_request: (image_content: String) -> Typhoeus::Request
 end
