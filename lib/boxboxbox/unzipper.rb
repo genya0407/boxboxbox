@@ -4,14 +4,18 @@ require 'zip'
 
 module Boxboxbox
   class Unzipper
-    def initialize(target_extensions:)
+    MACOS_METADATA_PATTERNS = %r{__MACOSX/|.DS_Store}.freeze
+
+    def initialize(target_extensions:, ignore_regexp: MACOS_METADATA_PATTERNS)
       @target_extensions = target_extensions
+      @ignore_regexp = ignore_regexp
     end
 
     def unzip(zip_path:)
       Enumerator.new do |yielder|
         Zip::InputStream.open(zip_path) do |zis|
           while entry = zis.get_next_entry
+            next if entry.name =~ @ignore_regexp
             next unless entry.name =~ target_extensions_regexp
 
             yielder << BinaryImage.new(name: entry.name, binary: entry.get_input_stream.read)
@@ -24,7 +28,7 @@ module Boxboxbox
     private
 
     def target_extensions_regexp
-      @target_extensions_regexp ||= Regexp.new(%w[png jpg jpeg].map { |ext| ".#{ext}$" }.join('|'))
+      @target_extensions_regexp ||= Regexp.new(@target_extensions.map { |ext| ".#{ext}$" }.join('|'))
     end
   end
 end

@@ -1,4 +1,5 @@
 module JSON
+  def self.pretty_generate: (Hash[untyped, untyped] | Array[untyped]) -> untyped
   def self.generate: (Hash[untyped, untyped] | Array[untyped]) -> untyped
   def self.parse: (String, ?Hash[Symbol, untyped]) -> untyped
 end

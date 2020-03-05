@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Boxboxbox::Unzipper do
   describe '.unzip' do
     context 'jpg, pngをターゲットに初期化したインスタンスにzipのPathnameが渡されたとき' do
-      let(:unzipper) { Boxboxbox::Unzipper.new(target_extensions: %w[jpeg png]) }
+      let(:unzipper) { Boxboxbox::Unzipper.new(target_extensions: %w[jpg png]) }
       let(:zip_path) do
         require 'tmpdir'
         require 'securerandom'
@@ -16,7 +16,7 @@ describe Boxboxbox::Unzipper do
       before do
         require 'zip_file_generator'
 
-        zip_source_dir = File.join(SPEC_FIXTURE_DIR, 'sample_zip')
+        zip_source_dir = File.join(SPEC_FIXTURE_DIR, 'sample_zip') # see spec/fixtures
         ZipFileGenerator.new(zip_source_dir, zip_path).write
       end
 
@@ -25,7 +25,7 @@ describe Boxboxbox::Unzipper do
       end
 
       it 'jpg, pngのimageを取得する' do
-        expect(unzipper.unzip(zip_path: zip_path).to_a.size).to eq 2 # spec/fixtures
+        expect(unzipper.unzip(zip_path: zip_path).to_a.size).to eq 2
       end
 
       it 'nameがファイル名になる' do

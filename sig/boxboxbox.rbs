@@ -26,8 +26,9 @@ end
 class Boxboxbox::Unzipper
   @target_extensions: ::Array[String]
   @target_extensions_regexp: Regexp
+  @ignore_regexp: Regexp
 
-  def initialize: (target_extensions: ::Array[String]) -> untyped
+  def initialize: (target_extensions: ::Array[String], ?ignore_regexp: Regexp) -> untyped
   def target_extensions_regexp: -> Regexp
   def unzip: (zip_path: Pathname) -> _Each[Boxboxbox::BinaryImage, nil]
 end
@@ -37,6 +38,7 @@ interface _BoxLocalizer
 end
 
 Boxboxbox::Unzipper::TARGET_EXTENSION_REGEX: Regexp
+Boxboxbox::Unzipper::MACOS_METADATA_PATTERNS: Regexp
 
 class Boxboxbox::BoxLocalizer::GoogleVisionApiOnline
   @access_token: String

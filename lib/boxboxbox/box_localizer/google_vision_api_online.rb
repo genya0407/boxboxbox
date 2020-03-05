@@ -85,6 +85,7 @@ module Boxboxbox
 
       def response2person_vertices(response_body:)
         localized_object_annotations = JSON.parse(response_body, symbolize_names: true).dig(:responses, 0, :localizedObjectAnnotations) || []
+        puts JSON.pretty_generate(localized_object_annotations)
         localized_object_annotations.select { |annot| annot[:name] == PERSON_LABEL }
                                     .select { |annot| annot[:score] >= @min_percentage }
                                     .map { |annot| annot.dig(:boundingPoly, :normalizedVertices) }
