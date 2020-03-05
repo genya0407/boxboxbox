@@ -13,8 +13,8 @@ module Boxboxbox
 
     def unzip(zip_path:)
       Enumerator.new do |yielder|
-        Zip::InputStream.open(zip_path) do |zis|
-          while entry = zis.get_next_entry
+        Zip::File.open(zip_path) do |zip_file|
+          zip_file.each do |entry|
             next if entry.name =~ @ignore_regexp
             next unless entry.name =~ target_extensions_regexp
 

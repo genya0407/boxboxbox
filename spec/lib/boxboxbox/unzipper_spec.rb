@@ -32,5 +32,14 @@ describe Boxboxbox::Unzipper do
         expect(unzipper.unzip(zip_path: zip_path).map(&:name)).to contain_exactly('child/hohho.png', 'hoge.jpg')
       end
     end
+
+    context 'macOSで圧縮されたzipが渡されたとき' do
+      let(:unzipper) { Boxboxbox::Unzipper.new(target_extensions: %w[jpg jpeg png]) }
+      let(:zip_path) { Pathname(File.join(SPEC_FIXTURE_DIR, 'mac.zip')) }
+
+      it '画像のPathのみが取得できる' do
+        expect(unzipper.unzip(zip_path: zip_path).to_a.map(&:name)).to contain_exactly('test/icon.png', 'test/zoom.png')
+      end
+    end
   end
 end
